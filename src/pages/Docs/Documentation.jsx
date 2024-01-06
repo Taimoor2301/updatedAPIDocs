@@ -15,7 +15,7 @@ export default function Home() {
 
 const HomeContent = () => {
 	return (
-		<div className='px-5 lg:py-14 col-span-full lg:col-span-8 overflow-auto max-h-full'>
+		<div className='px-5 lg:py-14 col-span-full lg:col-span-8 overflow-auto max-h-full scroll-smooth'>
 			<h1 className='text-2xl text-center lg:text-6xl lg:text-left font-poppins md:pl-10 font-extrabold text-gray-800 my-10'>Documentation</h1>
 
 			{data.map((d) => (
