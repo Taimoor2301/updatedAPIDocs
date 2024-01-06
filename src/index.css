@@ -1,0 +1,45 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap");
+@font-face {
+	font-family: righteous;
+	src: url(./assets/fonts/font.ttf);
+}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body,
+html,
+.scroll {
+	scroll-behavior: smooth;
+}
+
+::-webkit-scrollbar {
+	width: 5px;
+	background-color: rgba(128, 128, 128, 0.18);
+}
+
+::-webkit-scrollbar {
+	/* width: 10px; */
+	background-color: rgba(128, 128, 128, 0.18);
+}
+::-webkit-scrollbar-thumb {
+	background-color: rgba(128, 128, 128, 0.244);
+	border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+	background-color: rgba(128, 128, 128, 0.244);
+	border-radius: 10px;
+}
+
+nav > a.active {
+	/* color: purple; */
+	color: black;
+	transition: all 0.2s ease;
+	transform: translateY(-3px);
+}
+
+.gd-item {
+	display: flex !important;
+	justify-content: space-between !important;
+}
