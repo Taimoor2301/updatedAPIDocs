@@ -11,9 +11,9 @@ const useAuthStore = create((set, get) => ({
     setUser: (user) => set({ allUserData: user }),
     setLoading: (loading) => set({ loading }),
     isLoggedIn: () => {
-    console.log(get().allUserData)
-    return  get().allUserData != null
+        return  get().allUserData != null
     },
+    getAllUserData: () => get().allUserData,
    
 }));
 

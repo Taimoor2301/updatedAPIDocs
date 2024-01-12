@@ -40,12 +40,11 @@ const Login = () => {
 			var currentEndpoint = window.location.pathname;
 
 			// Check if the pathname contains "auth"
-			var containsAuth = currentEndpoint.includes("auth");
-			if (containsAuth) {
-				navigate("/dashboard");
-			} else {
-				window.location.reload();
-			}
+			// var containsAuth = currentEndpoint.includes("auth");
+			// if (containsAuth) {
+				
+			navigate("/dashboard");
+			window.location.reload()
 			setLoading(false);
 			resetForm();
 		}

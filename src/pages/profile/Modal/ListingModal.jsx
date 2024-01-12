@@ -110,7 +110,7 @@ const ListingModal = ({ closeModel, setAdded, id }) => {
 			setFetchingData(false);
 			setFetchingData(false)
 			setFetcherror(true)
-			toast.error("something went wong");
+			// toast.error("something went wong");
 		}
 	};
 

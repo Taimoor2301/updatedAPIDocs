@@ -107,12 +107,16 @@ export default Navbar;
 
 const SubNav = () => {
 	const isLoggedIn = useAuthStore((state) => state.isLoggedIn)();
-	// const [loggedIn, setLoggedIn] = useState(isLoggedIn);
-	console.log(isLoggedIn);
+	const  allUserData= useAuthStore((state) => state.getAllUserData)();
+	
+	const [loggedIn, setLoggedIn] = useState(isLoggedIn);
+	
 
-	// useEffect(() => {
-	// 	setLoggedIn(isLoggedIn);
-	// }, [isLoggedIn]);
+	useEffect(() => {
+		if (allUserData !==null) {
+			setLoggedIn(true);
+		}
+	}, [allUserData]);
 
 	return (
 		<div className='bg-black font-righteous text-gray-300  py-1'>
@@ -121,7 +125,7 @@ const SubNav = () => {
 					<FaPhoneAlt />
 					Need Support ? +411-555-555-5
 				</span>
-				{!isLoggedIn ? (
+				{!loggedIn ? (
 					<span>
 						<Link
 							to={"/auth/login"}
