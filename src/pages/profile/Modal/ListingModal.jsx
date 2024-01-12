@@ -8,16 +8,15 @@ import Spinner from "../../../components/Spinner";
 import { ethers } from "ethers";
 import Contract from "../../../utils/useContract";
 import { useAccount } from "wagmi";
-import { useEthersSigner } from '../../../utils/EthSigner';
+import { useEthersSigner } from "../../../utils/EthSigner";
 import { FaEthereum } from "react-icons/fa";
 const ListingModal = ({ closeModel, setAdded, id }) => {
 	const api = useAxios();
-	const provider = useEthersSigner()
+	const provider = useEthersSigner();
 	const [data, setData] = useState("");
 	const [fetchingData, setFetchingData] = useState(true);
 	const [loading, setLoading] = useState(false);
-	const { isConnected } = useAccount()
-
+	const { isConnected } = useAccount();
 
 	// inputs
 	const [endTime, setEndTime] = useState(0);
@@ -25,8 +24,8 @@ const ListingModal = ({ closeModel, setAdded, id }) => {
 	const [tokenPrice, setTokenPrice] = useState(0);
 	const [ethPrice, setEthPrice] = useState(0);
 	const [limiTed, setLimited] = useState(false);
-	const [dateTime, setDateTime] = useState('')
-	const [fetcherror, setFetcherror] = useState(false)
+	const [dateTime, setDateTime] = useState("");
+	const [fetcherror, setFetcherror] = useState(false);
 
 	function calculateRemainingSecondsFromEvent(dateTimeValue) {
 		// Extract the value from the event
@@ -42,51 +41,50 @@ const ListingModal = ({ closeModel, setAdded, id }) => {
 
 		// Convert milliseconds to seconds
 		const remainingSeconds = Math.floor(timeDifference / 1000);
-		setEndTime(remainingSeconds)
+		setEndTime(remainingSeconds);
 		return remainingSeconds;
 	}
 
-
 	async function createItem() {
-		setLoading(true)
-		console.log(isConnected)
+		setLoading(true);
+		console.log(isConnected);
 		if (!isConnected) {
-			toast.error("please connect your wallet")
-			setLoading(false)
-			return
+			toast.error("please connect your wallet");
+			setLoading(false);
+			return;
 		}
-		let rem_secs = calculateRemainingSecondsFromEvent(dateTime)
-		console.log(endTime)
-		if (endTime === '' || endTime <= 0 && !limiTed) {
-			toast.error(`please check input field of unlimted sale and time ${endTime === '' || endTime <= 0 ? "invalid ending time value if you dont want to implement time choose unlimited" : ""}`)
-			setLoading(false)
-			console.log()
-			return
+		let rem_secs = calculateRemainingSecondsFromEvent(dateTime);
+		console.log(endTime);
+		if (endTime === "" || (endTime <= 0 && !limiTed)) {
+			toast.error(
+				`please check input field of unlimted sale and time ${
+					endTime === "" || endTime <= 0 ? "invalid ending time value if you dont want to implement time choose unlimited" : ""
+				}`
+			);
+			setLoading(false);
+			console.log();
+			return;
 		}
 		try {
-			const contract = await Contract(provider)
-			const ethValue = ethers.parseUnits(ethPrice.toString(), 'ether');
-			const tokenval = ethers.parseUnits(tokenPrice.toString(), 'ether');
+			const contract = await Contract(provider);
+			const ethValue = ethers.parseUnits(ethPrice.toString(), "ether");
+			const tokenval = ethers.parseUnits(tokenPrice.toString(), "ether");
 			const tx = await contract.createItem(id, ethValue, tokenval, uri, limiTed, endTime);
 			await tx.wait();
 
 			if (fetcherror) {
-				await api.post("/listed/", { price_in_eth: ethPrice, price_in_token: tokenPrice, property: id, expiry: dateTime })
+				await api.post("/listed/", { price_in_eth: ethPrice, price_in_token: tokenPrice, property: id, expiry: dateTime });
+			} else {
+				await api.put(`/listed/${id}/`, { price_in_eth: ethPrice, price_in_token: tokenPrice, property: id, expiry: dateTime });
 			}
-			else {
-				await api.put(`/listed/${id}/`, { price_in_eth: ethPrice, price_in_token: tokenPrice, property: id, expiry: dateTime })
-			}
-			toast.success("listed successfully")
-			fetchData()
+			toast.success("listed successfully");
+			fetchData();
 		} catch (error) {
-			toast.error(`${error.message != undefined ? error.message : error}`)
-			console.log(error)
+			toast.error(`${error.message != undefined ? error.message : error}`);
+			console.log(error);
 		}
-		setLoading(false)
-
+		setLoading(false);
 	}
-
-
 
 	useEffect(() => {
 		document.body.style.overflowY = "hidden";
@@ -98,32 +96,31 @@ const ListingModal = ({ closeModel, setAdded, id }) => {
 			setFetchingData(true);
 			const response = await api.get(`listed/${id}`);
 			setData(response.data);
-			setTokenPrice(response.data.price_in_token)
-			setEthPrice(response.data.price_in_eth)
-			setDateTime(response.data.expiry)
+			setTokenPrice(response.data.price_in_token);
+			setEthPrice(response.data.price_in_eth);
+			setDateTime(response.data.expiry);
 
 			// console.log(response.data);
 			setFetchingData(false);
-			setFetcherror(false)
+			setFetcherror(false);
 		} catch (error) {
 			console.log(error);
 			setFetchingData(false);
-			setFetchingData(false)
-			setFetcherror(true)
+			setFetchingData(false);
+			setFetcherror(true);
 			// toast.error("something went wong");
 		}
 	};
 
-
-
 	useEffect(() => {
 		fetchData();
-		setUri(window.origin + '/details/' + id)
-		console.log(id)
+		setUri(window.origin + "/details/" + id);
+		console.log(id);
 	}, []);
 
 	return (
-		<motion.div style={{ overflow: "auto" }}
+		<motion.div
+			style={{ overflow: "auto" }}
 			className='bg-black/50 hover:text-gray-800 text-gray-800 backdrop-blur-sm fixed w-screen h-screen left-0 top-0 grid place-content-center z-[99999]'
 			onClick={() => closeModel(false)}>
 			<motion.div
@@ -136,26 +133,33 @@ const ListingModal = ({ closeModel, setAdded, id }) => {
 					className='absolute text-4xl right-3 top-3 cursor-pointer hover:text-red-600 transition-all duration-300'
 					onClick={() => closeModel(false)}
 				/>
-				{!fetchingData &&
-					<div style={{ margin: '20px', fontSize: 12, fontWeight: 'bold', color: 'green' }} >
-						<div className="gd-item">
+				{!fetchingData && (
+					<div style={{ margin: "20px", fontSize: 12, fontWeight: "bold", color: "green" }}>
+						<div className='gd-item'>
 							<div>Price in Matic:</div>
-							<div style={{ display: "inline" }}><p>{data?.price_in_eth} <FaEthereum size={20} /></p></div>
+							<div style={{ display: "inline" }}>
+								<p>
+									{data?.price_in_eth} <FaEthereum size={20} />
+								</p>
+							</div>
 						</div>
-						<div className="gd-item">
+						<div className='gd-item'>
 							<div>Price in Token:</div>
-							<div style={{ display: "inline" }}><p>{data?.price_in_token} <FaEthereum size={20} /></p></div>
+							<div style={{ display: "inline" }}>
+								<p>
+									{data?.price_in_token} <FaEthereum size={20} />
+								</p>
+							</div>
 						</div>
 
-						<div className="gd-item">
+						<div className='gd-item'>
 							<div>Expires On:</div>
-							<div style={{ display: "inline" }}>{data?.expiry?.split('T')[0]}  {data?.expiry?.split('T')[1]}</div>
+							<div style={{ display: "inline" }}>
+								{data?.expiry?.split("T")[0]} {data?.expiry?.split("T")[1]}
+							</div>
 						</div>
-
 					</div>
-
-
-				}
+				)}
 				<h1 className='text-lg font-poppins font-medium underline text-center'>Add to Listing</h1>
 
 				<div className='grid grid-cols-1 md:p-10 p-3 gap-3 md:gap-6 place-content-center'>
@@ -182,31 +186,33 @@ const ListingModal = ({ closeModel, setAdded, id }) => {
 						/>
 					</div>
 					<div className='flex flex-col gap-1.5 col-span-1'>
-						<label className='text-gray-700 font-bold text-xl' >Select Sale Type</label>
-						<select className='border border-purple-500 rounded-lg p-3 ' name="isUnlimited" id="" onChange={(e) => {
-							if (e.target.value == "2") {
-								setLimited(false)
-							}
-							else {
-								setLimited(true)
-								const currentDateTimeInSeconds = Math.floor(new Date().getTime() / 1000)+(60*60*24*7)
-								setEndTime(currentDateTimeInSeconds)
-								
-							}
-						}}>
-							<option value="2">Limited Time</option>
-							<option value="1">Unlimited</option>
+						<label className='text-gray-700 font-bold text-xl'>Select Sale Type</label>
+						<select
+							className='border border-purple-500 rounded-lg p-3 '
+							name='isUnlimited'
+							id=''
+							onChange={(e) => {
+								if (e.target.value == "2") {
+									setLimited(false);
+								} else {
+									setLimited(true);
+									const currentDateTimeInSeconds = Math.floor(new Date().getTime() / 1000) + 60 * 60 * 24 * 7;
+									setEndTime(currentDateTimeInSeconds);
+								}
+							}}>
+							<option value='2'>Limited Time</option>
+							<option value='1'>Unlimited</option>
 						</select>
 					</div>
 
-					{!limiTed &&
-
+					{!limiTed && (
 						<div className='flex flex-col gap-1.5 col-span-1'>
 							<label className='text-gray-700 font-bold text-xl'>Ending Time</label>
-							<input onChange={(e) => {
-								calculateRemainingSecondsFromEvent(e.target.value)
-								setDateTime(e.target.value)
-							}}
+							<input
+								onChange={(e) => {
+									calculateRemainingSecondsFromEvent(e.target.value);
+									setDateTime(e.target.value);
+								}}
 								type='datetime-local'
 								name='endingTime'
 								value={dateTime}
@@ -214,16 +220,12 @@ const ListingModal = ({ closeModel, setAdded, id }) => {
 								className='border border-purple-500 rounded-lg p-3 '
 							/>
 						</div>
-
-					}
-
-
-
+					)}
 
 					<div
 						className='col-span-full flex justify-center'
 						onClick={createItem}>
-						<button className='max-w-xl w-full py-2 font-bold rounded-lg text-xl bg-purple-500 text-white'>
+						<button className='max-w-xl w-full py-2 font-bold rounded-lg text-xl bg-gray-800 hover:bg-primary transition-all text-white'>
 							{loading ? "Please Wait..." : "Submit"}
 						</button>
 					</div>
@@ -233,7 +235,7 @@ const ListingModal = ({ closeModel, setAdded, id }) => {
 				position='bottom-center'
 				reverseOrder={false}
 			/>
-		</motion.div >
+		</motion.div>
 	);
 };
 

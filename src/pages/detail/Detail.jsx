@@ -12,23 +12,23 @@ import VerifyLoginModel from "./Modal/VerifyLoginModel";
 import { useAuthStore } from "../../store/auth";
 import { API_BASE_URL } from "../../utils/constants";
 import { ethers } from "ethers";
-import Contract from '../../utils/useContract';
+import Contract from "../../utils/useContract";
 import { useAccount } from "wagmi";
-import toast, { Toaster } from "react-hot-toast"
+import toast, { Toaster } from "react-hot-toast";
 import { useEthersSigner } from "../../utils/EthSigner";
 import { Link } from "react-router-dom";
 export default function Detail() {
 	const [data, setData] = useState([]);
-	const { isConnected } = useAccount()
+	const { isConnected } = useAccount();
 	const [loading, setLoading] = useState(false);
 	const [loadingTobuy, setLoadingTobuy] = useState(false);
 	const [error, setError] = useState(false);
 	const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
 	const [openModal, setOpenModal] = useState(false);
-	const [listingData, setListengData] = useState(0)
-	const [listed, setListed] = useState(false)
-	const provider = useEthersSigner()
-	const [buyerData, setBuyerData] = useState([])
+	const [listingData, setListengData] = useState(0);
+	const [listed, setListed] = useState(false);
+	const provider = useEthersSigner();
+	const [buyerData, setBuyerData] = useState([]);
 	const [isAuthorized, setIsAuthorized] = useState(false);
 
 	const { id } = useParams();
@@ -38,16 +38,16 @@ export default function Detail() {
 		try {
 			setLoading(true);
 			const response = await api.get(`/properties/${id}`);
-			const auth = await api.post(`download/${id}/1/`, {})
-			setIsAuthorized(auth.data.status)
+			const auth = await api.post(`download/${id}/1/`, {});
+			setIsAuthorized(auth.data.status);
 			setData(response.data);
 			setLoading(false);
 			try {
 				const response = await api.get(`listed/${id}`);
 				setListengData(response.data);
-				setListed(true)
+				setListed(true);
 			} catch (error) {
-				setListed(false)
+				setListed(false);
 			}
 			console.log(response.data);
 		} catch (error) {
@@ -59,50 +59,45 @@ export default function Detail() {
 
 	const AllBuyers = async () => {
 		try {
-			const data = await api.get(`buyers/${id}`)
-			setBuyerData(data.data)
-			console.log(data)
+			const data = await api.get(`buyers/${id}`);
+			setBuyerData(data.data);
+			console.log(data);
 		} catch (error) {
-			console.log(error)
+			console.log(error);
 		}
-
-	}
-
+	};
 
 	async function BuyWithEth() {
-		setLoadingTobuy(true)
+		setLoadingTobuy(true);
 
 		if (!isConnected) {
-			toast.error("please connect your wallet")
-			setLoading(false)
-			return
+			toast.error("please connect your wallet");
+			setLoading(false);
+			return;
 		}
 		try {
-			const contract = await Contract(provider)
-			const ethValue = ethers.parseUnits(listingData?.price_in_eth?.toString(), 'ether');
-			const tokenval = ethers.parseUnits(listingData?.price_in_token?.toString(), 'ether');
-			console.log(ethValue)
+			const contract = await Contract(provider);
+			const ethValue = ethers.parseUnits(listingData?.price_in_eth?.toString(), "ether");
+			const tokenval = ethers.parseUnits(listingData?.price_in_token?.toString(), "ether");
+			console.log(ethValue);
 			const tx = await contract.buyWithEth(id, { value: ethValue });
 			await tx.wait();
-			await api.post('autorize/', { id: id })
-			toast.success("bought successfully")
-			fetchData()
+			await api.post("autorize/", { id: id });
+			toast.success("bought successfully");
+			fetchData();
 		} catch (error) {
-			toast.error(`${error.message != undefined ? error.message : error}`)
-			console.log(error)
-			setLoadingTobuy(false)
+			toast.error(`${error.message != undefined ? error.message : error}`);
+			console.log(error);
+			setLoadingTobuy(false);
 		}
-		setLoadingTobuy(false)
-
+		setLoadingTobuy(false);
 	}
 
-	useEffect(() => {
-
-	}, []);
+	useEffect(() => {}, []);
 
 	useEffect(() => {
 		isLoggedIn && fetchData();
-		AllBuyers()
+		AllBuyers();
 	}, [isLoggedIn]);
 
 	if (loading)
@@ -114,7 +109,7 @@ export default function Detail() {
 
 	return (
 		<>
-			<AnimatePresence>{openModal && <VerifyLoginModel setOpenModal={setOpenModal} />}</AnimatePresence>
+			{/* <AnimatePresence>{openModal && <VerifyLoginModel setOpenModal={setOpenModal} />}</AnimatePresence> */}
 			<div className='bg-gray-100'>
 				<main className='max-w-7xl mx-auto lg:py-10 py-3 font-poppins grid grid-cols-2 lg:grid-cols-3 gap-4'>
 					<div className='bg-white rounded-xl flex flex-col gap-3 p-4 col-span-2'>
@@ -128,24 +123,24 @@ export default function Detail() {
 
 						<div className='flex justify-between items-center gap-5 text-gray-700'>
 							<h1 className='text-2xl md:text-3xl font-bold'>Document Name</h1>
-							<span className='p-2 rounded-md bg-purple-500 text-white text-sm'>{data.property_type}</span>
+							<span className='p-2 rounded-md bg-primary  text-sm'>{data.property_type}</span>
 						</div>
 
 						<div className='flex items-center gap-4 border-b-2 pb-6 text-gray-700 flex-wrap'>
 							<span className='flex items-center gap-2 text-sm font-semibold'>
-								<FaBed className='text-2xl text-purple-500' /> 4 Bed
+								<FaBed className='text-2xl text-primary' /> 4 Bed
 							</span>
 							<span className='flex items-center gap-2 text-sm font-semibold'>
-								<FaBath className='text-2xl text-purple-500' /> 4 Bath
+								<FaBath className='text-2xl text-primary' /> 4 Bath
 							</span>
 							<span className='flex items-center gap-2 text-sm font-semibold'>
-								<FaParking className='text-2xl text-purple-500' /> 4 Parking
+								<FaParking className='text-2xl text-primary' /> 4 Parking
 							</span>
 							<span className='flex items-center gap-2 text-sm font-semibold'>
-								<GiSwitzerland className='text-2xl text-purple-500' /> 400 sq feet
+								<GiSwitzerland className='text-2xl text-primary' /> 400 sq feet
 							</span>
 							<span className='flex items-center gap-2 text-sm font-semibold'>
-								<FaGooglePlus className='text-2xl text-purple-500' /> Google Plus Code: {data.google_plus_code}
+								<FaGooglePlus className='text-2xl text-primary' /> Google Plus Code: {data.google_plus_code}
 							</span>
 						</div>
 
@@ -165,15 +160,15 @@ export default function Detail() {
 						<h1 className='text-gray-800 font-bold text-xl'>Owner Deatils</h1>
 						<div className='flex flex-col lg:flex-row gap-5 flex-wrap text-gray-700 items-start lg:items-center'>
 							<span className='flex items-center justify-center gap-2 text-lg font-semibold'>
-								<IoPerson className='text-purple-500' />
+								<IoPerson className='text-primary' />
 								{data.owner_name}
 							</span>
 							<span className='flex items-center justify-center gap-2 text-lg font-semibold'>
-								<FaAddressBook className='text-purple-500' />
+								<FaAddressBook className='text-primary' />
 								{data.owner_address}
 							</span>
 							<span className='flex items-center justify-center gap-2 text-lg font-semibold'>
-								<FaPercentage className='text-purple-500' />
+								<FaPercentage className='text-primary' />
 								{data.owner_percentage}% Owneship
 							</span>
 						</div>
@@ -183,41 +178,40 @@ export default function Detail() {
 
 					<div className='col-span-full lg:col-span-1 rounded-xl p-4 bg-white flex flex-col gap-6'>
 						{/* appraisal  */}
-						<div className='flex flex-col gap-2 rounded-lg border border-purple-500 px-3 py-5 max-w-sm'>
+						<div className='flex flex-col gap-2 rounded-lg border border-primary px-3 py-5 max-w-sm'>
 							<span className='text-xl text-gray-700 font-bold flex justify-between gap-5 flex-col-reverse'>
-								Appraisal <IoMdDocument className='text-purple-500 text-6xl' />
+								Appraisal <IoMdDocument className='text-primary text-6xl' />
 							</span>
 
 							<p className='text-md bg-gray-100 p-1 rounded-lg text-sm mb-4'>click to view file</p>
 
 							{isAuthorized ? (
 								<a
-
 									href={`${API_BASE_URL}download/${id}/1`}
-									className='border-2 border-purple-500 text-gray-700
-						hover:text-white hover:bg-purple-500 transition-all py-2 rounded-xl font-bold flex justify-center items-center gap-2'>
+									className='border-2 border-primary text-gray-700
+						hover:text-white hover:bg-primary transition-all py-2 rounded-xl font-bold flex justify-center items-center gap-2'>
 									Download <FaDownload />
 								</a>
 							) : (
 								<a
-
-									href="#" onClick={(e) => {
-										e.preventDefault()
-										BuyWithEth()
+									href='#'
+									onClick={(e) => {
+										e.preventDefault();
+										BuyWithEth();
 									}}
 									disabled={loadingTobuy}
-
-									className='border-2 border-purple-500 text-gray-700
-						hover:text-white hover:bg-purple-500 transition-all py-2 rounded-xl font-bold flex justify-center items-center gap-2'>
-									{loadingTobuy ? "Please wait..." : "Click to Unlock "}<FaLock />
+									className='border-2 border-primary text-gray-700
+						hover:text-white hover:bg-primary transition-all py-2 rounded-xl font-bold flex justify-center items-center gap-2'>
+									{loadingTobuy ? "Please wait..." : "Click to Unlock "}
+									<FaLock />
 								</a>
 							)}
 						</div>
 
 						{/* deed of ownership  */}
-						<div className='flex flex-col gap-2 rounded-lg border border-purple-500 px-3 py-5 max-w-sm'>
+						<div className='flex flex-col gap-2 rounded-lg border border-primary px-3 py-5 max-w-sm'>
 							<span className='text-xl text-gray-700 font-bold flex justify-between gap-5 flex-col-reverse'>
-								Deed of Ownership <IoMdDocument className='text-purple-500 text-6xl' />
+								Deed of Ownership <IoMdDocument className='text-primary text-6xl' />
 							</span>
 
 							<p className='text-md bg-gray-100 p-1 rounded-lg text-sm mb-4'>click to view file</p>
@@ -225,33 +219,34 @@ export default function Detail() {
 							{isAuthorized ? (
 								<a
 									href={`${API_BASE_URL}download/${id}/2`}
-
-									className='border-2 border-purple-500 text-gray-700
-						hover:text-white hover:bg-purple-500 transition-all py-2 rounded-xl font-bold flex justify-center items-center gap-2'>
+									className='border-2 border-primary text-gray-700
+						hover:text-white hover:bg-primary transition-all py-2 rounded-xl font-bold flex justify-center items-center gap-2'>
 									Download <FaDownload />
 								</a>
 							) : (
 								<a
 									href={`#`}
 									onClick={(e) => {
-										e.preventDefault()
-										BuyWithEth()
+										e.preventDefault();
+										BuyWithEth();
 									}}
 									disabled={loadingTobuy}
-
-
-									className='border-2 border-purple-500 text-gray-700
-						hover:text-white hover:bg-purple-500 transition-all py-2 rounded-xl font-bold flex justify-center items-center gap-2'>
+									className='border-2 border-primary text-gray-700
+						hover:text-white hover:bg-primary transition-all py-2 rounded-xl font-bold flex justify-center items-center gap-2'>
 									{loadingTobuy ? "Please wait..." : "Click to Unlock "} <FaLock />
 								</a>
 							)}
 						</div>
 						{/* download button  */}
 
-						{!isAuthorized ?
-							<button disabled={loadingTobuy} onClick={BuyWithEth} className='rounded-xl border-2 py-2 font-bold text-gray-700 border-purple-500 hover:bg-purple-500 hover:text-white transition-all duration-300'>
+						{!isAuthorized ? (
+							<button
+								disabled={loadingTobuy}
+								onClick={BuyWithEth}
+								className='rounded-xl border-2 py-2 font-bold text-gray-700 border-primary hover:bg-primary hover:text-white transition-all duration-300'>
 								{loadingTobuy ? "Please wait..." : "Buy Now"}
-							</button> :
+							</button>
+						) : (
 							<>
 								{buyerData.map((el, i) => (
 									<ListElement
@@ -261,8 +256,7 @@ export default function Detail() {
 									/>
 								))}
 							</>
-
-						}
+						)}
 					</div>
 				</main>
 			</div>
@@ -276,7 +270,11 @@ const ListElement = ({ data, index }) => {
 		<Link
 			to={`/details/${data?.propery}`}
 			className='py-4 px-2 border-b flex items-center gap-5 w-full hover:bg-purple-300 transition-all rounded-lg hover:text-white text-xs'>
-			<img src={data.profile_photo} alt="" style={{ height: 60, width: 60, borderRadius: "50%", borderWidth: 2, borderColor: "black" }} />
+			<img
+				src={data.profile_photo}
+				alt=''
+				style={{ height: 60, width: 60, borderRadius: "50%", borderWidth: 2, borderColor: "black" }}
+			/>
 			<span className='w-52 font-semibold'>{data?.username}</span>
 			<span className='w-full text-end font-medium underline'>{data?.date}</span>
 		</Link>

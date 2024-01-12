@@ -110,7 +110,7 @@ const ListElement = ({ property_type, id, owner_name, index, deleteProperty, set
 	const [openListingModal, setOpenListingModal] = useState(false);
 
 	return (
-		<div className='py-4 md:px-2 border-b flex items-center gap-5 w-full hover:bg-purple-300 transition-all rounded-lg hover:text-white text-xs'>
+		<div className='py-4 md:px-2 border-b flex items-center gap-5 w-full hover:bg-primary/50 transition-all rounded-lg  text-xs'>
 			<AnimatePresence>
 				{openEditModal && (
 					<EditDataModal
@@ -146,14 +146,13 @@ const ListElement = ({ property_type, id, owner_name, index, deleteProperty, set
 				/>
 				<MdDeleteForever
 					onClick={() => deleteProperty(id)}
-					className='hover:scale-150 hover:text-red-500 hover:-translate-y-1 transition-all duration-150'
+					className='hover:scale-150 hover:text-red-600 hover:-translate-y-1 transition-all duration-150'
 					title='delete'
 				/>
 
 				<FaClipboardList
 					title='add to listing'
 					onClick={() => setOpenListingModal(true)}
-					color={listed_on ? "green" : "red"}
 					className='hover:scale-150 hover:-translate-y-1 transition-all duration-150 hover:text-gray-800'
 				/>
 			</div>

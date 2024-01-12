@@ -14,7 +14,7 @@ export default function Sidebar() {
 
 	return (
 		<>
-			<div className='text-3xl fixed bottom-5 left-5 p-2 rounded-lg bg-purple-500 text-white lg:hidden'>
+			<div className='text-3xl fixed bottom-5 left-5 p-2 rounded-lg bg-primary text-white lg:hidden'>
 				<FaBars onClick={() => setOpensidebar(true)} />
 			</div>
 

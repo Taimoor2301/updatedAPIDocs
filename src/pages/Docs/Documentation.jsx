@@ -52,7 +52,7 @@ const Element = ({ title, description, javascript, python, php, id }) => {
 						onClick={() => setActiveCode(o)}
 						key={o}
 						className={`text-sm font-poppins bg-gray-300 hover:bg-purple-500 transition-all duration-300 hover:text-white rounded-md p-2 ${
-							activeCode === o && "bg-purple-500 text-white"
+							activeCode === o && "bg-gray-800 text-white"
 						}`}>
 						{o}
 					</button>

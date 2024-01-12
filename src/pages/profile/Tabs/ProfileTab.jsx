@@ -61,7 +61,7 @@ const ProfileTab = () => {
 			))}
 
 			<button
-				className='text-lg bg-gray-800 hover:bg-purple-500 text-white col-span-1 font-poppins py-1.5 rounded-md transition-all duration-500 group flex items-center gap-2 justify-center'
+				className='text-lg bg-gray-800 hover:bg-primary text-white col-span-1 font-poppins py-1.5 rounded-md transition-all duration-500 group flex items-center gap-2 justify-center'
 				onClick={handleUpdate}>
 				{updating ? "Please Wait" : "Update"} <FaArrowRight className='group-hover:translate-x-1 transition-all' />
 			</button>

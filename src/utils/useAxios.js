@@ -1,68 +1,65 @@
-import axios from 'axios';
-import { getRefreshToken, isAccessTokenExpired, setAuthUser } from './auth';
-import { API_BASE_URL } from './constants';
-import Cookies from 'js-cookie';
+import axios from "axios";
+import { getRefreshToken, isAccessTokenExpired, setAuthUser } from "./auth";
+import { API_BASE_URL } from "./constants";
+import Cookies from "js-cookie";
 
 const useAxios = () => {
+	const refreshToken = Cookies.get("refresh_token");
+	let axiosInstance;
+	try {
+		const accessToken = Cookies.get("access_token");
 
-    const refreshToken = Cookies.get('refresh_token');
+		axiosInstance = axios.create({
+			baseURL: API_BASE_URL,
+			headers: { Authorization: `Bearer ${accessToken}` },
+		});
 
-    let axiosInstance;
+		axiosInstance.interceptors.request.use(async (req) => {
+			if (!isAccessTokenExpired(accessToken)) return req;
 
-    try {
-        const accessToken = Cookies.get('access_token');
+			const response = await getRefreshToken(refreshToken);
 
-        axiosInstance = axios.create({
-            baseURL: API_BASE_URL,
-            headers: { Authorization: `Bearer ${accessToken}` },
-        });
+			setAuthUser(response.access, response.refresh);
 
-        axiosInstance.interceptors.request.use(async (req) => {
-            if (!isAccessTokenExpired(accessToken)) return req;
+			req.headers.Authorization = `Bearer ${response.access}`;
+			return req;
+		});
+	} catch (error) {
+		// Handle the case where access token is undefined
+		console.error("Access token is undefined:", error);
 
-            const response = await getRefreshToken(refreshToken);
+		// Define an asynchronous function and call it immediately
+		(async () => {
+			try {
+				const newAccessToken = await getRefreshToken(refreshToken);
 
-            setAuthUser(response.access, response.refresh);
+				// Update cookies and create a new axios instance
+				Cookies.set("access_token", newAccessToken.access);
+				Cookies.set("refresh_token", newAccessToken.refresh);
 
-            req.headers.Authorization = `Bearer ${response.access}`;
-            return req;
-        });
-    } catch (error) {
-        // Handle the case where access token is undefined
-        console.error('Access token is undefined:', error);
+				axiosInstance = axios.create({
+					baseURL: API_BASE_URL,
+					headers: { Authorization: `Bearer ${newAccessToken.access}` },
+				});
 
-        // Define an asynchronous function and call it immediately
-        (async () => {
-            try {
-                const newAccessToken = await getRefreshToken(refreshToken);
+				axiosInstance.interceptors.request.use(async (req) => {
+					if (!isAccessTokenExpired(newAccessToken.access)) return req;
 
-                // Update cookies and create a new axios instance
-                Cookies.set('access_token', newAccessToken.access);
-                Cookies.set('refresh_token', newAccessToken.refresh);
+					const response = await getRefreshToken(refreshToken);
 
-                axiosInstance = axios.create({
-                    baseURL: API_BASE_URL,
-                    headers: { Authorization: `Bearer ${newAccessToken.access}` },
-                });
+					setAuthUser(response.access, response.refresh);
 
-                axiosInstance.interceptors.request.use(async (req) => {
-                    if (!isAccessTokenExpired(newAccessToken.access)) return req;
+					req.headers.Authorization = `Bearer ${response.access}`;
+					return req;
+				});
+			} catch (error) {
+				// Handle error when getting a new access token
+				console.error("Error getting new access token:", error);
+			}
+		})();
+	}
 
-                    const response = await getRefreshToken(refreshToken);
-
-                    setAuthUser(response.access, response.refresh);
-
-                    req.headers.Authorization = `Bearer ${response.access}`;
-                    return req;
-                });
-            } catch (error) {
-                // Handle error when getting a new access token
-                console.error('Error getting new access token:', error);
-            }
-        })();
-    }
-
-    return axiosInstance;
+	return axiosInstance;
 };
 
 export default useAxios;

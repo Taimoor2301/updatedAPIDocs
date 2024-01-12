@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { IoLogIn, IoEyeSharp } from "react-icons/io5";
 import { FaArrowRight, FaUser } from "react-icons/fa";
 
@@ -15,6 +15,10 @@ const Login = () => {
 	const [loading, setLoading] = useState(false);
 	const [type, setType] = useState("password");
 	const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+
+	const location = useLocation();
+
+	const from = location.state?.from?.pathname || "/dashboard";
 
 	useEffect(() => {
 		if (isLoggedIn()) {
@@ -42,9 +46,9 @@ const Login = () => {
 			// Check if the pathname contains "auth"
 			// var containsAuth = currentEndpoint.includes("auth");
 			// if (containsAuth) {
-				
-			navigate("/dashboard");
-			window.location.reload()
+
+			navigate(from);
+			window.location.reload();
 			setLoading(false);
 			resetForm();
 		}
@@ -52,7 +56,7 @@ const Login = () => {
 	return (
 		<form
 			onSubmit={handleSubmit}
-			className='flex flex-col gap-5 px-6 bg-white md:min-w-[30rem] min-w-[95%] md:border-[2px] border-primary rounded-2xl font-poppins py-8'>
+			className='flex flex-col gap-5 px-6 bg-white md:min-w-[30rem] min-w-[95%] md:border-[2px] border-gray-800 rounded-2xl font-poppins py-8'>
 			<div className='text-center py-3 flex flex-col items-center gap-3'>
 				<IoLogIn className='text-primary text-6xl' />
 				<span className='text-5xl font-bold'>Welcome</span>
@@ -110,7 +114,7 @@ const Login = () => {
 
 			<button
 				type='submit'
-				className='bg-primary text-white font-medium tracking-wide text-lg py-2 rounded-lg px-10 hover:bg-purple-600 transition-all flex justify-center items-center gap-2 group'>
+				className='hover:bg-primary text-white font-medium tracking-wide text-lg py-2 rounded-lg px-10 bg-gray-800 transition-all flex justify-center items-center gap-2 group'>
 				{loading ? <Spinner /> : "Login"} {!loading && <FaArrowRight className='group-hover:translate-x-2 transition-all' />}
 			</button>
 

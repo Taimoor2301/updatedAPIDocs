@@ -111,7 +111,7 @@ const EditDataModal = ({ closeModel, setAdded, id }) => {
 							Property Type
 							<select
 								value={data.property_type}
-								className='border-2 rounded-lg p-1'
+								className='border border-gray-400 rounded-lg p-1'
 								onChange={(e) => setData((prev) => ({ ...prev, property_type: e.target.value }))}>
 								<option value='commercial'>Commercial</option>
 								<option value='residential'>Residential</option>
@@ -123,7 +123,7 @@ const EditDataModal = ({ closeModel, setAdded, id }) => {
 							Location
 							<div className='flex gap-2 flex-wrap'>
 								<input
-									className='border rounded-lg p-2 w-28'
+									className='border border-gray-400 rounded-lg p-2 w-28'
 									type='number'
 									name='lattitude'
 									value={data.latitude}
@@ -131,7 +131,7 @@ const EditDataModal = ({ closeModel, setAdded, id }) => {
 									placeholder='lattitude'
 								/>
 								<input
-									className='border rounded-lg p-2 w-28'
+									className='border border-gray-400 rounded-lg p-2 w-28'
 									type='number'
 									name='longitude'
 									value={data.longitude}
@@ -146,6 +146,7 @@ const EditDataModal = ({ closeModel, setAdded, id }) => {
 							Upload Pictures
 							<input
 								type='file'
+								className='file:border-none file:text-white file:bg-gray-800 file:p-1.5 border border-gray-400 rounded-lg file:hover:bg-primary file:transition-all'
 								id='property_pictures'
 								onChange={(e) => setImage(e)}
 							/>
@@ -160,7 +161,7 @@ const EditDataModal = ({ closeModel, setAdded, id }) => {
 								rows='5'
 								value={data.description}
 								placeholder='description...'
-								className='rounded-lg border-2 p-2'
+								className='rounded-lg border border-gray-400 p-2'
 								onChange={(e) => setData((prev) => ({ ...prev, description: e.target.value }))}></textarea>
 						</label>
 
@@ -172,7 +173,7 @@ const EditDataModal = ({ closeModel, setAdded, id }) => {
 								type='text'
 								value={data.google_plus_code}
 								placeholder='google plus code...'
-								className='rounded-lg border-2 p-2'
+								className='rounded-lg border border-gray-400 p-2'
 								onChange={(e) => setData((prev) => ({ ...prev, google_plus_code: e.target.value }))}
 							/>
 						</label>
@@ -183,6 +184,7 @@ const EditDataModal = ({ closeModel, setAdded, id }) => {
 							<input
 								name='deedofownership'
 								type='file'
+								className='file:border-none file:text-white file:bg-gray-800 file:p-1.5 border border-gray-400 rounded-lg file:hover:bg-primary file:transition-all'
 								onChange={(e) => setDeed(e)}
 							/>
 						</label>
@@ -193,6 +195,7 @@ const EditDataModal = ({ closeModel, setAdded, id }) => {
 							<input
 								name='appraisal'
 								type='file'
+								className='file:border-none file:text-white file:bg-gray-800 file:p-1.5 border border-gray-400 rounded-lg file:hover:bg-primary file:transition-all'
 								onChange={(e) => setAppraisal(e)}
 							/>
 						</label>
@@ -206,7 +209,7 @@ const EditDataModal = ({ closeModel, setAdded, id }) => {
 									type='text'
 									value={data.owner_name}
 									placeholder='name...'
-									className='rounded-lg border-2 p-2'
+									className='rounded-lg border border-gray-400 p-2'
 									onChange={(e) => setData((prev) => ({ ...prev, owner_name: e.target.value }))}
 								/>
 								<input
@@ -214,7 +217,7 @@ const EditDataModal = ({ closeModel, setAdded, id }) => {
 									type='text'
 									value={data.owner_address}
 									placeholder='address...'
-									className='rounded-lg border-2 p-2'
+									className='rounded-lg border border-gray-400 p-2'
 									onChange={(e) => setData((prev) => ({ ...prev, owner_address: e.target.value }))}
 								/>
 								<input
@@ -222,14 +225,14 @@ const EditDataModal = ({ closeModel, setAdded, id }) => {
 									type='text'
 									value={data.owner_percentage}
 									placeholder='ownership %'
-									className='rounded-lg border-2 p-2'
+									className='rounded-lg border border-gray-400 p-2'
 									onChange={(e) => setData((prev) => ({ ...prev, owner_percentage: e.target.value }))}
 								/>
 							</div>
 						</label>
 
 						<button
-							className='p-2 rounded-lg bg-purple-500 flex items-center justify-center text-white text-sm font-poppins font-medium gap-2 w-52 hover:bg-purple-600 transition-all group h-12'
+							className='p-2 rounded-lg bg-gray-700 flex items-center justify-center text-white text-sm font-poppins font-medium gap-2 w-52 hover:bg-primary transition-all group h-12'
 							onClick={handlePostRequest}>
 							{loading ? "Please wait..." : "Submit"} <FaArrowRight className='group-hover:translate-x-2 transition-all' />
 						</button>

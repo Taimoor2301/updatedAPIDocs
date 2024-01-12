@@ -26,11 +26,11 @@ const WalletTab = () => {
 
 			<div className='font-righteous col-span-full flex flex-col items-center gap-4'>
 				<button
-					className='text-lg text-purple-500 border-2 border-purple-500 hover:bg-purple-500 hover:text-white font-poppins py-1.5 w-44 rounded-md transition-all duration-500'
+					className='text-lg bg-gray-800 text-white hover:bg-primary font-poppins py-1.5 w-44 rounded-md transition-all duration-500'
 					onClick={() => setOpenModel(true)}>
 					Recharge
 				</button>
-				<button className='text-lg bg-gray-800 text-white border-2 hover:border-purple-500 border-transparent hover:bg-purple-500 hover:text-white font-poppins py-1.5 w-44 rounded-md transition-all duration-500'>
+				<button className='text-lg bg-gray-800 text-white  hover:bg-primary font-poppins py-1.5 w-44 rounded-md transition-all duration-500'>
 					Convert
 				</button>
 			</div>

@@ -1,41 +1,72 @@
 import { useEffect, useState } from "react";
 import { FaUnlockAlt, FaArrowRight } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
+import Spinner from "../../components/Spinner";
+import axios from "axios";
+import { API_BASE_URL } from "../../utils/constants";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function EnterVarificationCode() {
 	const [code, setCode] = useState("");
 	const [error, setError] = useState({ status: false, msg: "Incorrect Code" });
-	let [count, setCount] = useState(60);
-
+	const [loading, setLoading] = useState(false);
+	let [count, setCount] = useState(120);
+	const [email, setEmail] = useState(localStorage.getItem("forget_email"));
 	const navigate = useNavigate();
-	let temp = "1234";
 
 	useEffect(() => {
-		setTimeout(() => {
+		const t = setTimeout(() => {
 			if (count > 0) setCount((p) => p - 1);
-			else null;
 		}, 1000);
 	}, [count]);
 
-	const handleSubmit = (e) => {
+	const handleSendAgain = async (e) => {
+		if (count === 0) {
+			try {
+				const res = await axios.post(`${API_BASE_URL}/send_code/forget/`, { email });
+				localStorage.setItem("forget_email", email);
+				toast.success("email sent again");
+				setCount(120);
+			} catch (error) {
+				console.log(error);
+				toast.error("something went wrong");
+			}
+		}
+	};
+
+	const handleSubmit = async (e) => {
 		e.preventDefault();
-		// check code logic here
-		if (code === temp) {
-			navigate("/auth/newpassword");
-			setError((p) => ({ ...p, status: false }));
-		} else setError((p) => ({ ...error, status: true }));
+		setLoading(true);
+
+		try {
+			const res = await axios.put(`${API_BASE_URL}/confirm_code/`, {
+				email,
+				code,
+			});
+			if (res.status === 200) {
+				navigate("/auth/newpassword");
+			}
+		} catch (error) {
+			if (error.response.status === 401) {
+				setError({ status: true, msg: "Invalid verification code" });
+			} else toast.error("something went wrong, please try again");
+		} finally {
+			setLoading(false);
+		}
 	};
 	return (
-		<form onSubmit={handleSubmit}>
+		<form
+			onSubmit={handleSubmit}
+			className='flex flex-col gap-5 px-6 bg-white md:min-w-[30rem] min-w-[95%] md:border-[2px] border-gray-800 rounded-2xl font-poppins py-8'>
 			<div className='text-center py-3 flex flex-col items-center gap-1'>
 				<FaUnlockAlt className='text-purple-500 text-6xl' />
 				<span className='text-xl md:text-5xl font-bold'>Enter Verification code</span>
-				<span className='text-sm text-gray-500'>taimoorali4214@gmail.com</span>
+				<span className='text-sm text-gray-500'>{email}</span>
 			</div>
 
 			<div className='flex flex-col gap-1 mt-10 mb-5'>
 				<input
-					className='py-3.5 px-4 rounded-md border-2 border-purple-500 focus:outline-purple-500'
+					className='py-3.5 px-4 rounded-md border-2 border-gray-800 focus:outline-purple-none'
 					type='text'
 					value={code}
 					onChange={(e) => setCode(e.target.value)}
@@ -56,7 +87,8 @@ export default function EnterVarificationCode() {
 				<button
 					type='button'
 					disabled={count > 0}
-					className='hover:bg-purple-500 hover:text-white border-2 border-purple-500  font-medium tracking-wide py-1.5 rounded-lg px-3 text-sm transition-all flex justify-center items-center gap-2 group disabled:cursor-not-allowed'>
+					onClick={() => handleSendAgain()}
+					className='hover:bg-primary text-white bg-gray-800  font-medium tracking-wide py-1.5 rounded-lg px-3 text-sm transition-all flex justify-center items-center gap-2 group disabled:cursor-not-allowed'>
 					Send Again <FaArrowRight className='group-hover:translate-x-2 transition-all' />
 				</button>
 			</div>
@@ -71,9 +103,13 @@ export default function EnterVarificationCode() {
 			</p>
 			<button
 				type='submit'
-				className='bg-purple-500 text-white font-medium tracking-wide text-lg py-2 rounded-lg px-10 hover:bg-purple-600 transition-all flex justify-center items-center gap-2 group'>
-				Submit <FaArrowRight className='group-hover:translate-x-2 transition-all' />
+				className='bg-gray-800 text-white font-medium tracking-wide text-lg py-2 rounded-lg px-10 hover:bg-primary transition-all flex justify-center items-center gap-2 group'>
+				{loading ? <Spinner /> : "Submit"} {!loading && <FaArrowRight className='group-hover:translate-x-2 transition-all' />}
 			</button>
+			<Toaster
+				position='bottom-right'
+				reverseOrder={false}
+			/>
 		</form>
 	);
 }

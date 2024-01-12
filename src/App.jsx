@@ -14,12 +14,15 @@ import Detail from "./pages/detail/Detail";
 import Home from "./pages/Home/Home";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navigation/Navbar";
-
+import EnterverificationCode from "./pages/auth/EnterVarificationCode";
+import NewPassword from "./pages/auth/NewPassword";
 import About from "./pages/About/About";
+import Scroll from "./components/Scroll";
 export default function App() {
 	return (
 		<>
 			<MainWraper>
+				<Scroll />
 				<Navbar />
 				<Routes>
 					<Route
@@ -66,14 +69,14 @@ export default function App() {
 							path='forgetpassword'
 							element={<ForgetPassword />}
 						/>
-						{/* <Route
+						<Route
 							path='verifycode'
-							element={<EnterVarificationCode />}
+							element={<EnterverificationCode />}
 						/>
 						<Route
 							path='newpassword'
 							element={<NewPassword />}
-						/> */}
+						/>
 					</Route>
 
 					<Route
