@@ -14,44 +14,38 @@ const Signup = () => {
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
 	const [password2, setPassword2] = useState("");
-	const [email, setEmail] = useState("");
+	const [code, setCode] = useState("");
 	const [loading, setLoading] = useState(false);
 	const [type, setType] = useState("password");
 	const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
 	const navigate = useNavigate();
 
 	const location = useLocation();
-
+	const email = localStorage.getItem("user_email");
 	const from = location.state?.from?.pathname || "/dashboard";
 
 	useEffect(() => {
 		if (isLoggedIn()) {
-			navigate("/");
+			navigate(from);
 		}
 	}, []);
 
-	const resetForm = () => {
-		setUsername("");
-		setPassword("");
-		setPassword2("");
-		setEmail("");
-	};
-
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-
 		if (password !== password2) {
-			return toast.error("Passwords do'nt match");
+			return toast.error("Passwords don't match");
 		}
 		setLoading(true);
-		const { error } = await register(username, password, password2, email);
+		const { error } = await register(username, password, email, code);
 		if (error) {
-			toast.error(JSON.stringify(error));
+			setLoading(false);
+			console.log(error);
+			toast.error(`${error.response.data.error}` || "something went wrong");
 		} else {
+			setLoading(false);
 			navigate(from);
-			resetForm();
+			window.location.reload();
 		}
-		setLoading(false);
 	};
 	return (
 		<form
@@ -86,12 +80,26 @@ const Signup = () => {
 				</label>
 				<input
 					className='py-3.5 px-4 border-b-2 focus:outline-none'
-					type='email'
-					name='email'
-					id='email'
+					value={email}
 					required
-					placeholder='email'
-					onChange={(e) => setEmail(e.target.value)}
+					readOnly
+				/>
+			</div>
+
+			<div className='flex flex-col gap-1'>
+				<label
+					className='text-md flex items-center justify-between'
+					htmlFor='code'>
+					Verification Code <FaUser className='text-2xl text-primary' />
+				</label>
+				<input
+					className='py-3.5 px-4 border-b-2 focus:outline-none'
+					type='text'
+					name='verificationcode'
+					id='verificationcode'
+					required
+					placeholder='verification code has been sent to your email'
+					onChange={(e) => setCode(e.target.value)}
 				/>
 			</div>
 			<div className='flex flex-col gap-1'>
@@ -138,7 +146,8 @@ const Signup = () => {
 
 			<button
 				type='submit'
-				className='hover:bg-primary text-white font-medium tracking-wide text-lg py-2 rounded-lg px-10 bg-gray-800 transition-all flex justify-center items-center gap-2 group'>
+				disabled={loading}
+				className='hover:bg-primary text-white font-medium tracking-wide text-lg py-2 rounded-lg px-10 bg-gray-800 transition-all flex justify-center items-center gap-2 group disabled:cursor-not-allowed disabled:opacity-80'>
 				{loading ? <Spinner /> : "Signup"} {!loading && <FaArrowRight className='group-hover:translate-x-2 transition-all' />}
 			</button>
 

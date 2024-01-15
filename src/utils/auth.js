@@ -21,21 +21,20 @@ export const login = async (username, password) => {
 	}
 };
 
-export const register = async (username, password, password2,email) => {
+export const register = async (username, password, email, code) => {
 	try {
 		const { data } = await axios.post("register/", {
 			username,
 			password,
-			password2,
-			email
-			
+			email,
+			code,
 		});
 		await login(username, password);
 		return { data, error: null };
 	} catch (error) {
 		return {
 			data: null,
-			error: error.response.data || "Something went wrong",
+			error,
 		};
 	}
 };

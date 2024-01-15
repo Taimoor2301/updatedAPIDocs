@@ -5,6 +5,7 @@ import toast, { Toaster } from "react-hot-toast";
 import useAxios from "../../../utils/useAxios";
 import { DataTemplate } from "../../../constants/dataTemplate";
 import { Country, State, City } from "country-state-city";
+import { useAuthStore } from "../../../store/auth";
 // console.log(Country.getAllCountries().slice(0, 5));
 // console.log(State.getAllStates().slice(0, 5));
 
@@ -13,6 +14,8 @@ const ProfileTab = () => {
 	const { userData, loading, error } = useUserData();
 	const [updating, setUpdating] = useState(false);
 	const api = useAxios();
+
+	const { allUserData } = useAuthStore();
 
 	useEffect(() => {
 		if (!loading && !error && userData) {
@@ -48,7 +51,10 @@ const ProfileTab = () => {
 
 	return (
 		<div className='grid grid-cols-1 md:grid-cols-2 gap-5'>
-			<h1 className='text-2xl font-poppins tracking-wide col-span-full text-center py-6 font-bold'>Profile</h1>
+			<h1 className='text-2xl font-poppins tracking-wide col-span-full text-center py-6 font-bold flex flex-col items-center justify-center gap-1'>
+				Profile
+				<span className='text-sm font-semibold'>{allUserData.username}</span>
+			</h1>
 
 			{Object.entries(data).map(([fieldName, field]) => (
 				<DataField

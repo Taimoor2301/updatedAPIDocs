@@ -8,6 +8,7 @@ import useAxios from "../../../utils/useAxios";
 
 const AddNewModel = ({ closeModel, setAdded }) => {
 	const dataTemplate = {
+		title: "",
 		property_type: "commercial",
 		location: "abc",
 		description: "",
@@ -123,6 +124,19 @@ const AddNewModel = ({ closeModel, setAdded }) => {
 						/>
 					</label>
 
+					{/* title  */}
+					<label className='col-span-2 lg:grid-cols-1 flex flex-col gap-2'>
+						Title
+						<input
+							name='title'
+							type='text'
+							value={data.title}
+							placeholder='title'
+							className='rounded-lg border border-gray-400 p-2'
+							onChange={(e) => setData((prev) => ({ ...prev, title: e.target.value }))}
+						/>
+					</label>
+
 					{/* description  */}
 					<label className='col-span-full flex flex-col gap-2'>
 						Property Description
@@ -150,7 +164,7 @@ const AddNewModel = ({ closeModel, setAdded }) => {
 					</label>
 
 					{/* Deed of ownership  */}
-					<label className='col-span-1 flex flex-col gap-2'>
+					<label className='col-span-2 lg:col-span-1 flex flex-col gap-2'>
 						Deed of Ownership
 						<input
 							name='deedofownership'
@@ -161,7 +175,7 @@ const AddNewModel = ({ closeModel, setAdded }) => {
 					</label>
 
 					{/* appraisal  */}
-					<label className='col-span-1 flex flex-col gap-2'>
+					<label className='col-span-2 lg:col-span-1 flex flex-col gap-2'>
 						Appraisal
 						<input
 							name='appraisal'
@@ -203,7 +217,8 @@ const AddNewModel = ({ closeModel, setAdded }) => {
 					</label>
 
 					<button
-						className='p-2 rounded-lg bg-gray-700 flex items-center justify-center text-white text-sm font-poppins font-medium gap-2 w-52 hover:bg-primary transition-all group h-12'
+						disabled={loading}
+						className='p-2 disabled:opacity-70 disabled:cursor-not-allowed rounded-lg bg-gray-700 flex items-center justify-center text-white text-sm font-poppins font-medium gap-2 w-52 hover:bg-primary transition-all group h-12'
 						onClick={handlePostRequest}>
 						{loading ? "Please wait..." : "Submit"} <FaArrowRight className='group-hover:translate-x-2 transition-all' />
 					</button>

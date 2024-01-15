@@ -22,7 +22,7 @@ const Login = () => {
 
 	useEffect(() => {
 		if (isLoggedIn()) {
-			navigate("/");
+			navigate(from);
 		}
 	}, []);
 
@@ -114,7 +114,8 @@ const Login = () => {
 
 			<button
 				type='submit'
-				className='hover:bg-primary text-white font-medium tracking-wide text-lg py-2 rounded-lg px-10 bg-gray-800 transition-all flex justify-center items-center gap-2 group'>
+				disabled={loading}
+				className='hover:bg-primary text-white font-medium tracking-wide text-lg py-2 rounded-lg px-10 bg-gray-800 transition-all flex justify-center items-center gap-2 group disabled:cursor-not-allowed disabled:opacity-80'>
 				{loading ? <Spinner /> : "Login"} {!loading && <FaArrowRight className='group-hover:translate-x-2 transition-all' />}
 			</button>
 

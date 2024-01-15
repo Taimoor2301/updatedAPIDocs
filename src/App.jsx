@@ -18,6 +18,7 @@ import EnterverificationCode from "./pages/auth/EnterVarificationCode";
 import NewPassword from "./pages/auth/NewPassword";
 import About from "./pages/About/About";
 import Scroll from "./components/Scroll";
+import GetEmail from "./pages/auth/GetEmail";
 export default function App() {
 	return (
 		<>
@@ -63,6 +64,10 @@ export default function App() {
 						/>
 						<Route
 							path='signup'
+							element={<GetEmail />}
+						/>
+						<Route
+							path='signupdetails'
 							element={<Signup />}
 						/>
 						<Route

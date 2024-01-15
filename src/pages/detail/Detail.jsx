@@ -1,4 +1,3 @@
-import { GrLocation } from "react-icons/gr";
 import { FaBed, FaBath, FaParking, FaGooglePlus, FaAddressBook, FaPercentage, FaDownload, FaLock } from "react-icons/fa";
 import { GiSwitzerland } from "react-icons/gi";
 import { IoMdDocument } from "react-icons/io";
@@ -8,7 +7,7 @@ import { useEffect, useState } from "react";
 import useAxios from "../../utils/useAxios";
 import Spinner from "../../components/Spinner";
 import { AnimatePresence } from "framer-motion";
-import VerifyLoginModel from "./Modal/VerifyLoginModel";
+import SendEmailModal from "./Modal/SendEmail";
 import { useAuthStore } from "../../store/auth";
 import { API_BASE_URL } from "../../utils/constants";
 import { ethers } from "ethers";
@@ -30,6 +29,17 @@ export default function Detail() {
 	const provider = useEthersSigner();
 	const [buyerData, setBuyerData] = useState([]);
 	const [isAuthorized, setIsAuthorized] = useState(false);
+	const [selectedUsers, setSelectedUsers] = useState([]);
+
+	function handleSelect(user) {
+		const item = selectedUsers.find((el) => el.user === user);
+		if (item) {
+			setSelectedUsers((prev) => prev.filter((el) => el.user !== user));
+		} else {
+			const el = buyerData.find((el) => el.user === user);
+			setSelectedUsers((prev) => [...prev, { ...el }]);
+		}
+	}
 
 	const { id } = useParams();
 	const api = useAxios();
@@ -49,7 +59,6 @@ export default function Detail() {
 			} catch (error) {
 				setListed(false);
 			}
-			console.log(response.data);
 		} catch (error) {
 			console.log(error);
 			setError(true);
@@ -61,7 +70,6 @@ export default function Detail() {
 		try {
 			const data = await api.get(`buyers/${id}`);
 			setBuyerData(data.data);
-			console.log(data);
 		} catch (error) {
 			console.log(error);
 		}
@@ -109,7 +117,15 @@ export default function Detail() {
 
 	return (
 		<>
-			{/* <AnimatePresence>{openModal && <VerifyLoginModel setOpenModal={setOpenModal} />}</AnimatePresence> */}
+			<AnimatePresence>
+				{openModal && (
+					<SendEmailModal
+						data={selectedUsers}
+						closeModal={setOpenModal}
+						setSelected={handleSelect}
+					/>
+				)}
+			</AnimatePresence>
 			<div className='bg-gray-100'>
 				<main className='max-w-7xl mx-auto lg:py-10 py-3 font-poppins grid grid-cols-2 lg:grid-cols-3 gap-4'>
 					<div className='bg-white rounded-xl flex flex-col gap-3 p-4 col-span-2'>
@@ -122,7 +138,7 @@ export default function Detail() {
 						</div>
 
 						<div className='flex justify-between items-center gap-5 text-gray-700'>
-							<h1 className='text-2xl md:text-3xl font-bold'>Document Name</h1>
+							<h1 className='text-2xl md:text-3xl font-bold'>{data.title || "Document Name"}</h1>
 							<span className='p-2 rounded-md bg-primary  text-sm'>{data.property_type}</span>
 						</div>
 
@@ -187,7 +203,7 @@ export default function Detail() {
 
 							{isAuthorized ? (
 								<a
-									href={`${API_BASE_URL}download/${id}/1`}
+									href={`${API_BASE_URL}/download/${id}/1`}
 									className='border-2 border-primary text-gray-700
 						hover:text-white hover:bg-primary transition-all py-2 rounded-xl font-bold flex justify-center items-center gap-2'>
 									Download <FaDownload />
@@ -218,7 +234,7 @@ export default function Detail() {
 
 							{isAuthorized ? (
 								<a
-									href={`${API_BASE_URL}download/${id}/2`}
+									href={`${API_BASE_URL}/download/${id}/2`}
 									className='border-2 border-primary text-gray-700
 						hover:text-white hover:bg-primary transition-all py-2 rounded-xl font-bold flex justify-center items-center gap-2'>
 									Download <FaDownload />
@@ -247,15 +263,23 @@ export default function Detail() {
 								{loadingTobuy ? "Please wait..." : "Buy Now"}
 							</button>
 						) : (
-							<>
+							<div className='flex flex-col gap-2'>
+								<h3 className='font-bold text-center text-xl'>Authorized Users</h3>
 								{buyerData.map((el, i) => (
 									<ListElement
 										key={el.id}
 										data={el}
 										index={i}
+										selected={selectedUsers}
+										setSelected={handleSelect}
 									/>
 								))}
-							</>
+								<button
+									onClick={() => setOpenModal(true)}
+									className='w-max px-5 py-2 rounded-md text-white font-semibold self-center bg-gray-800 hover:bg-primary disabled:cursor-not-allowed disabled:opacity-70 transition-all'>
+									Send Updates
+								</button>
+							</div>
 						)}
 					</div>
 				</main>
@@ -265,18 +289,25 @@ export default function Detail() {
 	);
 }
 
-const ListElement = ({ data, index }) => {
+const ListElement = ({ data, index, selected, setSelected }) => {
+	const isSeleted = Boolean(selected.find((el) => el.user === data.user));
+
 	return (
-		<Link
-			to={`/details/${data?.propery}`}
-			className='py-4 px-2 border-b flex items-center gap-5 w-full hover:bg-purple-300 transition-all rounded-lg hover:text-white text-xs'>
+		<div
+			onClick={() => setSelected(data.user)}
+			className='py-4 px-2 cursor-pointer border-b flex items-center gap-5 w-full hover:bg-primary/50 transition-all rounded-lg text-xs'>
+			<input
+				type='checkbox'
+				readOnly
+				checked={isSeleted}
+			/>
 			<img
 				src={data.profile_photo}
 				alt=''
-				style={{ height: 60, width: 60, borderRadius: "50%", borderWidth: 2, borderColor: "black" }}
+				className='w-12 aspect-square rounded-full border-2 border-gray-700 object-cover'
 			/>
 			<span className='w-52 font-semibold'>{data?.username}</span>
 			<span className='w-full text-end font-medium underline'>{data?.date}</span>
-		</Link>
+		</div>
 	);
 };

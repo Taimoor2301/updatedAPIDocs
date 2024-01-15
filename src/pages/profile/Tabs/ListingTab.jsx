@@ -153,7 +153,7 @@ const ListElement = ({ property_type, id, owner_name, index, deleteProperty, set
 				<FaClipboardList
 					title='add to listing'
 					onClick={() => setOpenListingModal(true)}
-					className='hover:scale-150 hover:-translate-y-1 transition-all duration-150 hover:text-gray-800'
+					className={`hover:scale-150 hover:-translate-y-1 transition-all duration-150 ${listed_on ? "text-blue-600" : ""}`}
 				/>
 			</div>
 			<span className='text-end font-medium underline w-full'>{property_type}</span>
