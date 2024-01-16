@@ -24,6 +24,7 @@ const EditDataModal = ({ closeModel, setAdded, id }) => {
 		owner_name: "",
 		owner_address: "",
 		owner_percentage: "",
+		update_summary: "",
 	};
 
 	useEffect(() => {
@@ -104,7 +105,7 @@ const EditDataModal = ({ closeModel, setAdded, id }) => {
 						<Spinner />
 					</div>
 				) : (
-					<div className='grid grid-cols-2 md:grid-cols-4 gap-5 text-sm font-poppins w-full overflow-auto flex-1'>
+					<div className='grid grid-cols-2 md:grid-cols-4 gap-2 text-sm font-poppins w-full overflow-auto flex-1'>
 						{/*  type  */}
 						<label
 							htmlFor=''
@@ -245,11 +246,23 @@ const EditDataModal = ({ closeModel, setAdded, id }) => {
 							</div>
 						</label>
 
+						<label className='col-span-full flex flex-col gap-2'>
+							Summary of Update
+							<textarea
+								name='updateSummary'
+								cols='20'
+								rows='5'
+								value={data.update_summary}
+								placeholder='summary of update...'
+								className='rounded-lg border border-gray-400 p-2'
+								onChange={(e) => setData((prev) => ({ ...prev, update_summary: e.target.value }))}></textarea>
+						</label>
+
 						<button
 							disabled={loading}
-							className='p-2 disabled:opacity-70 disabled:cursor-not-allowed rounded-lg bg-gray-700 flex items-center justify-center text-white text-sm font-poppins font-medium gap-2 w-52 hover:bg-primary transition-all group h-12'
+							className='p-2 disabled:opacity-70 disabled:cursor-not-allowed rounded-lg bg-gray-800 flex items-center justify-center text-white text-sm font-poppins font-medium gap-2 w-52 hover:bg-primary transition-all group h-12'
 							onClick={handlePostRequest}>
-							{loading ? "Please wait..." : "Submit"} <FaArrowRight className='group-hover:translate-x-2 transition-all' />
+							{loading ? "Please wait..." : "Save"} <FaArrowRight className='group-hover:translate-x-2 transition-all' />
 						</button>
 					</div>
 				)}

@@ -8,47 +8,25 @@ import { API_BASE_URL } from "../../../utils/constants";
 import { useParams } from "react-router-dom";
 import Spinner from "../../../components/Spinner";
 
-export default function SendEmailModal({ data, closeModal, setSelected }) {
-	const [subject, setSubject] = useState("");
-	const [des, setDes] = useState("");
+export default function AddNewUser({ closeModal }) {
 	const [loading, setLoading] = useState(false);
+	const [userId, setUserId] = useState("");
 
 	const { id } = useParams();
 
 	useEffect(() => {
 		document.body.style.overflow = "hidden";
-
 		return () => (document.body.style.overflow = "auto");
 	}, []);
 
-	async function handleSend() {
-		const arr = data.map((el) => el.user);
-
-		if (!arr.length) {
-			toast.error("User List Empty!");
-			return;
-		}
-
+	async function searchUser(e) {
+		e.preventDefault();
 		setLoading(true);
-
-		try {
-			const res = await axios.post(API_BASE_URL + "/send_email", {
-				subject,
-				description: des,
-				item_id: id,
-				users_list: arr,
-			});
-
-			console.log(res);
-		} catch (error) {
-			console.log(error);
-		} finally {
-			setLoading(false);
-		}
+		alert(userId);
 	}
 
 	return (
-		<motion.div
+		<div
 			className='bg-black/50 backdrop-blur-sm fixed w-screen h-screen left-0 top-0 grid place-content-center z-[99999]'
 			onClick={() => closeModal(false)}>
 			<motion.div
@@ -62,60 +40,30 @@ export default function SendEmailModal({ data, closeModal, setSelected }) {
 					className='absolute text-4xl right-3 top-3 cursor-pointer hover:text-red-600 transition-all duration-300'
 				/>
 
-				<h1 className='text-xl font-bold text-center'>Authorized Users</h1>
+				<h1 className='text-xl font-bold text-center'>Authorize New User</h1>
 
-				<div className='flex max-h-full overflow-auto w-full gap-5 flex-wrap-reverse'>
-					<div className='flex flex-col w-full lg:max-w-[45%]'>
-						<label htmlFor=''>Subject</label>
+				<div className='w-full h-full'>
+					<form
+						className='flex gap-2 justify-center'
+						onSubmit={searchUser}>
 						<input
 							type='text'
-							id='subject'
-							value={subject}
-							onChange={(e) => setSubject(e.target.value)}
-							placeholder='subject'
-							className='w-full p-2 border-gray-700 border rounded-md'
+							value={userId}
+							onChange={(e) => setUserId(e.target.value)}
+							placeholder='Enter User ID'
+							className='p-2 rounded-md border border-gray-700 bg-gray-50'
 						/>
 
-						<label
-							htmlFor='des'
-							className='pt-5 pb-1'>
-							Description
-						</label>
-						<textarea
-							name='des'
-							id='des'
-							cols='30'
-							rows='10'
-							value={des}
-							onChange={(e) => setDes(e.target.value)}
-							placeholder='subject'
-							className='w-full p-2 border-gray-700 border rounded-md'></textarea>
-
 						<button
-							disabled={loading || !subject || !des}
-							className='w-max px-5 py-2 rounded-md text-white font-semibold self-center bg-gray-800 hover:bg-primary disabled:cursor-not-allowed disabled:opacity-70 transition-all my-5'
-							onClick={() => handleSend()}>
-							{loading ? <Spinner /> : "Send Email"}
+							type='submit'
+							disabled={loading}
+							className='text-white font-medium bg-gray-800 hover:bg-primary disabled:hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-80 px-4 py-2 rounded text-lg transition-all w-[10rem] max-h-full'>
+							{loading ? <Spinner /> : "Search"}
 						</button>
-					</div>
-
-					<div className='lg:max-w-[45%] w-full flex flex-col gap-2 border rounded-lg p-3'>
-						{data.map((el, i) => (
-							<ListElement
-								key={el.id}
-								data={el}
-								index={i}
-								setSelected={setSelected}
-							/>
-						))}
-					</div>
+					</form>
 				</div>
 			</motion.div>
-			<Toaster
-				position='bottom-center'
-				reverseOrder={false}
-			/>
-		</motion.div>
+		</div>
 	);
 }
 

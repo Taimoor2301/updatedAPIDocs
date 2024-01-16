@@ -1,7 +1,5 @@
-import { FaBed, FaBath, FaParking, FaGooglePlus, FaAddressBook, FaPercentage, FaDownload, FaLock } from "react-icons/fa";
-import { GiSwitzerland } from "react-icons/gi";
+import { FaDownload, FaLock } from "react-icons/fa";
 import { IoMdDocument } from "react-icons/io";
-import { IoPerson } from "react-icons/io5";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import useAxios from "../../utils/useAxios";
@@ -15,7 +13,9 @@ import Contract from "../../utils/useContract";
 import { useAccount } from "wagmi";
 import toast, { Toaster } from "react-hot-toast";
 import { useEthersSigner } from "../../utils/EthSigner";
-import { Link } from "react-router-dom";
+import Column1 from "./Column1";
+import AddNewUser from "./Modal/AddUserModal";
+
 export default function Detail() {
 	const [data, setData] = useState([]);
 	const { isConnected } = useAccount();
@@ -30,6 +30,7 @@ export default function Detail() {
 	const [buyerData, setBuyerData] = useState([]);
 	const [isAuthorized, setIsAuthorized] = useState(false);
 	const [selectedUsers, setSelectedUsers] = useState([]);
+	const [openAddUser, setOpenAddUser] = useState(false);
 
 	function handleSelect(user) {
 		const item = selectedUsers.find((el) => el.user === user);
@@ -126,71 +127,13 @@ export default function Detail() {
 					/>
 				)}
 			</AnimatePresence>
+			<AnimatePresence>{openAddUser && <AddNewUser closeModal={setOpenAddUser} />}</AnimatePresence>
 			<div className='bg-gray-100'>
 				<main className='max-w-7xl mx-auto lg:py-10 py-3 font-poppins grid grid-cols-2 lg:grid-cols-3 gap-4'>
-					<div className='bg-white rounded-xl flex flex-col gap-3 p-4 col-span-2'>
-						<div className='rounded-xl overflow-hidden h-[20rem]'>
-							<img
-								className='w-full h-full object-cover object-center'
-								src={data.pictures}
-								alt=''
-							/>
-						</div>
-
-						<div className='flex justify-between items-center gap-5 text-gray-700'>
-							<h1 className='text-2xl md:text-3xl font-bold'>{data.title || "Document Name"}</h1>
-							<span className='p-2 rounded-md bg-primary  text-sm'>{data.property_type}</span>
-						</div>
-
-						<div className='flex items-center gap-4 border-b-2 pb-6 text-gray-700 flex-wrap'>
-							<span className='flex items-center gap-2 text-sm font-semibold'>
-								<FaBed className='text-2xl text-primary' /> 4 Bed
-							</span>
-							<span className='flex items-center gap-2 text-sm font-semibold'>
-								<FaBath className='text-2xl text-primary' /> 4 Bath
-							</span>
-							<span className='flex items-center gap-2 text-sm font-semibold'>
-								<FaParking className='text-2xl text-primary' /> 4 Parking
-							</span>
-							<span className='flex items-center gap-2 text-sm font-semibold'>
-								<GiSwitzerland className='text-2xl text-primary' /> 400 sq feet
-							</span>
-							<span className='flex items-center gap-2 text-sm font-semibold'>
-								<FaGooglePlus className='text-2xl text-primary' /> Google Plus Code: {data.google_plus_code}
-							</span>
-						</div>
-
-						<iframe
-							src={`https://www.google.com/maps/embed/v1/view?key=AIzaSyC9DCzt7dwG4YXxa2DwzqcwXr-uw7P4zzs&center=${data.latitude},${data.longitude}&zoom=10`}
-							width='100%'
-							height='450'
-							allowFullScreen={true}
-							loading='lazy'
-							referrerPolicy='no-referrer-when-downgrade'></iframe>
-
-						<div className='flex gap-2 flex-col border-b-2 pb-5'>
-							<h1 className='font-bold text-xl text-gray-800'>Property Deatils</h1>
-							<p className='text-sm text-gray-600 lg:max-w-[80%]'>{data.description}</p>
-						</div>
-
-						<h1 className='text-gray-800 font-bold text-xl'>Owner Deatils</h1>
-						<div className='flex flex-col lg:flex-row gap-5 flex-wrap text-gray-700 items-start lg:items-center'>
-							<span className='flex items-center justify-center gap-2 text-lg font-semibold'>
-								<IoPerson className='text-primary' />
-								{data.owner_name}
-							</span>
-							<span className='flex items-center justify-center gap-2 text-lg font-semibold'>
-								<FaAddressBook className='text-primary' />
-								{data.owner_address}
-							</span>
-							<span className='flex items-center justify-center gap-2 text-lg font-semibold'>
-								<FaPercentage className='text-primary' />
-								{data.owner_percentage}% Owneship
-							</span>
-						</div>
-					</div>
-
-					{/* 2nd column  */}
+					<Column1
+						data={data}
+						isAuthorized={isAuthorized}
+					/>
 
 					<div className='col-span-full lg:col-span-1 rounded-xl p-4 bg-white flex flex-col gap-6'>
 						{/* appraisal  */}
@@ -264,7 +207,14 @@ export default function Detail() {
 							</button>
 						) : (
 							<div className='flex flex-col gap-2'>
-								<h3 className='font-bold text-center text-xl'>Authorized Users</h3>
+								<p className='font-bold text-center text-xl flex justify-between items-center'>
+									Authorized Users
+									<button
+										onClick={() => setOpenAddUser(true)}
+										className='text-xs p-1 rounded bg-gray-800 text-white font-medium hover:bg-primary'>
+										Add User
+									</button>
+								</p>
 								{buyerData.map((el, i) => (
 									<ListElement
 										key={el.id}
@@ -289,9 +239,8 @@ export default function Detail() {
 	);
 }
 
-const ListElement = ({ data, index, selected, setSelected }) => {
+const ListElement = ({ data, selected, setSelected }) => {
 	const isSeleted = Boolean(selected.find((el) => el.user === data.user));
-
 	return (
 		<div
 			onClick={() => setSelected(data.user)}

@@ -218,7 +218,7 @@ const AddNewModel = ({ closeModel, setAdded }) => {
 
 					<button
 						disabled={loading}
-						className='p-2 disabled:opacity-70 disabled:cursor-not-allowed rounded-lg bg-gray-700 flex items-center justify-center text-white text-sm font-poppins font-medium gap-2 w-52 hover:bg-primary transition-all group h-12'
+						className='p-2 disabled:opacity-70 disabled:cursor-not-allowed rounded-lg bg-gray-800 flex items-center justify-center text-white text-sm font-poppins font-medium gap-2 w-52 hover:bg-primary transition-all group h-12'
 						onClick={handlePostRequest}>
 						{loading ? "Please wait..." : "Submit"} <FaArrowRight className='group-hover:translate-x-2 transition-all' />
 					</button>

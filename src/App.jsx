@@ -19,10 +19,15 @@ import NewPassword from "./pages/auth/NewPassword";
 import About from "./pages/About/About";
 import Scroll from "./components/Scroll";
 import GetEmail from "./pages/auth/GetEmail";
+import { Toaster } from "react-hot-toast";
 export default function App() {
 	return (
 		<>
 			<MainWraper>
+				<Toaster
+					position='bottom-center'
+					reverseOrder={false}
+				/>
 				<Scroll />
 				<Navbar />
 				<Routes>
