@@ -11,7 +11,6 @@ import Spinner from "../../../components/Spinner";
 export default function AddNewUser({ closeModal }) {
 	const [loading, setLoading] = useState(false);
 	const [userId, setUserId] = useState("");
-
 	const { id } = useParams();
 
 	useEffect(() => {
@@ -34,7 +33,7 @@ export default function AddNewUser({ closeModal }) {
 				animate={{ opacity: 1, scale: 1 }}
 				exit={{ opacity: 0, scale: 0 }}
 				onClick={(e) => e.stopPropagation()}
-				className='bg-white max-w-7xl mx-auto lg:w-[80vw] w-[95vw] h-[90vh] lg:h-[93vh] rounded-xl p-3 shadow-md flex flex-col py-8 items-center gap-10 relative'>
+				className='bg-white max-w-xl mx-auto lg:w-[80vw] w-[95vw] h-[90vh] lg:h-[93vh] rounded-xl p-3 shadow-md flex flex-col py-8 items-center gap-10 relative'>
 				<IoCloseCircleOutline
 					onClick={() => closeModal(false)}
 					className='absolute text-4xl right-3 top-3 cursor-pointer hover:text-red-600 transition-all duration-300'
@@ -42,26 +41,24 @@ export default function AddNewUser({ closeModal }) {
 
 				<h1 className='text-xl font-bold text-center'>Authorize New User</h1>
 
-				<div className='w-full h-full'>
-					<form
-						className='flex gap-2 justify-center'
-						onSubmit={searchUser}>
-						<input
-							type='text'
-							value={userId}
-							onChange={(e) => setUserId(e.target.value)}
-							placeholder='Enter User ID'
-							className='p-2 rounded-md border border-gray-700 bg-gray-50'
-						/>
+				<form
+					className='flex gap-2 w-full'
+					onSubmit={searchUser}>
+					<input
+						type='text'
+						value={userId}
+						onChange={(e) => setUserId(e.target.value)}
+						placeholder='Enter User ID'
+						className='p-2 flex-1 rounded-md border border-gray-700 bg-gray-50'
+					/>
 
-						<button
-							type='submit'
-							disabled={loading}
-							className='text-white font-medium bg-gray-800 hover:bg-primary disabled:hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-80 px-4 py-2 rounded text-lg transition-all w-[10rem] max-h-full'>
-							{loading ? <Spinner /> : "Search"}
-						</button>
-					</form>
-				</div>
+					<button
+						type='submit'
+						disabled={loading}
+						className='text-white font-medium bg-gray-800 hover:bg-primary disabled:hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-80 px-4 py-2 rounded text-lg transition-all w-[10rem] max-h-full'>
+						{loading ? <Spinner /> : "Search"}
+					</button>
+				</form>
 			</motion.div>
 		</div>
 	);

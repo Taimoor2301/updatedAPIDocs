@@ -6,6 +6,7 @@ import useAxios from "../../../utils/useAxios";
 import { DataTemplate } from "../../../constants/dataTemplate";
 import { Country, State, City } from "country-state-city";
 import { useAuthStore } from "../../../store/auth";
+import Spinner from "../../../components/Spinner";
 // console.log(Country.getAllCountries().slice(0, 5));
 // console.log(State.getAllStates().slice(0, 5));
 
@@ -56,21 +57,33 @@ const ProfileTab = () => {
 				<span className='text-sm font-semibold'>{allUserData.username}</span>
 			</h1>
 
-			{Object.entries(data).map(([fieldName, field]) => (
-				<DataField
-					key={fieldName}
-					{...field}
-					countary={data.country}
-					state={data.state}
-					onChange={handleChange}
-				/>
-			))}
+			{loading ? (
+				<div className='col-span-full'>
+					<Spinner />
+				</div>
+			) : (
+				Object.entries(data).map(([fieldName, field]) => (
+					<DataField
+						key={fieldName}
+						{...field}
+						countary={data.country}
+						state={data.state}
+						onChange={handleChange}
+					/>
+				))
+			)}
 
-			<button
-				className='text-lg bg-gray-800 hover:bg-primary text-white col-span-1 font-poppins py-1.5 rounded-md transition-all duration-500 group flex items-center gap-2 justify-center'
-				onClick={handleUpdate}>
-				{updating ? "Please Wait" : "Update"} <FaArrowRight className='group-hover:translate-x-1 transition-all' />
-			</button>
+			{}
+
+			{!loading && (
+				<button
+					disabled={updating}
+					className='text-lg bg-gray-800 hover:bg-primary disabled:hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-80 text-white col-span-1 font-poppins py-1.5 rounded-md transition-all duration-500 group flex items-center gap-2 justify-center'
+					onClick={handleUpdate}>
+					{updating ? <Spinner /> : "Update"}
+					{!updating && <FaArrowRight className='group-hover:translate-x-1 transition-all' />}
+				</button>
+			)}
 
 			<Toaster
 				position='bottom-center'

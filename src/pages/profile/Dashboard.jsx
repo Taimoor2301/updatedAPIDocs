@@ -9,6 +9,7 @@ import Spinner from "../../components/Spinner";
 import { getLink } from "../../utils/getLink";
 import toast, { Toaster } from "react-hot-toast";
 import useAxios from "../../utils/useAxios";
+import Settings from "./Tabs/SettingsTab/Settings";
 
 const Profile = () => {
 	const [activeTab, setActiveTab] = useState("Profile");
@@ -101,7 +102,7 @@ const Profile = () => {
 					</div>
 
 					<div className='bg-white rounded-xl px-5 py-6 mt-20 border'>
-						<div className='flex justify-center'>
+						<div className='flex justify-center items-center gap-y-2 flex-wrap'>
 							{buttons.map((button, i) => (
 								<TabButton
 									key={i}
@@ -132,6 +133,7 @@ const buttons = [
 	{ name: "Listing", el: ListingTab },
 	{ name: "History", el: HistoryTab },
 	{ name: "Wallet", el: WalletTab },
+	{ name: "Settings", el: Settings },
 ];
 
 function TabButton({ name, active, onclick }) {

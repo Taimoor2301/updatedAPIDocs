@@ -127,11 +127,6 @@ const Login = () => {
 					Signup
 				</Link>
 			</div>
-
-			<Toaster
-				position='bottom-right'
-				reverseOrder={false}
-			/>
 		</form>
 	);
 };
