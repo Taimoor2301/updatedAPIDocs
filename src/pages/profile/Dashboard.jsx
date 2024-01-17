@@ -9,7 +9,7 @@ import Spinner from "../../components/Spinner";
 import { getLink } from "../../utils/getLink";
 import toast, { Toaster } from "react-hot-toast";
 import useAxios from "../../utils/useAxios";
-import Settings from "./Tabs/SettingsTab/Settings";
+import Settings from "./Tabs/SettingsTab/MainSettingsComponent";
 
 const Profile = () => {
 	const [activeTab, setActiveTab] = useState("Profile");

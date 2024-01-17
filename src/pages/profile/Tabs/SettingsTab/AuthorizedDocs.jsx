@@ -5,8 +5,8 @@ import { Link } from "react-router-dom";
 import useAxious from "../../../../utils/useAxios";
 import { MdDeleteForever, MdEditSquare } from "react-icons/md";
 import toast, { Toaster } from "react-hot-toast";
-import AddUserModal from "./Modals/AddUserModal";
-import EditUserModal from "./Modals/EditUserModal";
+import AddUserModal from "./AuthUserModals/Add";
+import EditUserModal from "./AuthUserModals/Edit";
 
 export default function AuthorizedUsers({ users }) {
 	const [openAddNewModel, setOpenAddNewModel] = useState(false);

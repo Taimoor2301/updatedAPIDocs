@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import APIkey from "./APIKey";
-import AuthorizedUsers from "./UsersList";
+import AuthorizedUsers from "./AuthorizedUsers";
+import AuthorizedDocs from "./AuthorizedDocs";
 
 export default function Settings() {
 	const [active, setActive] = useState("API Key");
@@ -13,7 +14,7 @@ export default function Settings() {
 				setActive={setActive}
 			/>
 
-			{active === "API Key" ? <APIkey /> : <AuthorizedUsers />}
+			{buttons.map((but) => (but.name === active ? <but.el key={but.name} /> : null))}
 		</div>
 	);
 }
@@ -30,7 +31,7 @@ const ButtonList = ({ active, setActive }) => {
 	}
 	return (
 		<div className='col-span-full flex justify-center items-center'>
-			<div className='border-2 overflow-hidden rounded-md border-gray-800 grid grid-cols-2'>
+			<div className='border-2 overflow-hidden rounded-md border-gray-800 grid grid-cols-3'>
 				{buttons.map((i) => (
 					<TabButton
 						key={i.name}
@@ -47,4 +48,5 @@ const ButtonList = ({ active, setActive }) => {
 const buttons = [
 	{ name: "API Key", el: APIkey },
 	{ name: "Authorized Users", el: AuthorizedUsers },
+	{ name: "Authorized Docs", el: AuthorizedDocs },
 ];
