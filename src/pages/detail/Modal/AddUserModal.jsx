@@ -3,16 +3,21 @@ import { motion } from "framer-motion";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { IoCloseCircle } from "react-icons/io5";
 import toast, { Toaster } from "react-hot-toast";
-import axios from "axios";
-import { API_BASE_URL } from "../../../utils/constants";
+
 import { useParams } from "react-router-dom";
 import Spinner from "../../../components/Spinner";
 import useAxios from "../../../utils/useAxios";
 
-export default function AddNewUser({ closeModal }) {
+export default function AddNewUser({ closeModal, setChanged }) {
   const [loading, setLoading] = useState(false);
   const [username, setUserName] = useState("");
+  const [data, setData] = useState([]);
+  const [notFound, setNotFound] = useState(false);
+  const roles = ["Select Role", "Appraiser", "Agent", "Buyer"];
+  const [role, setRole] = useState(roles[0]);
   const { id } = useParams();
+  const [savingUser, setSavingUser] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(null);
   const api = useAxios();
 
   useEffect(() => {
@@ -25,14 +30,52 @@ export default function AddNewUser({ closeModal }) {
 
     try {
       setLoading(true);
-      const res = await api.get(`/authorized_users/modify/0/`, {
-        params: { username },
+      setNotFound(false);
+      const res = await api.post(`/authorized_users/modify/0/`, {
+        username,
       });
-      console.log(res);
+
+      if (res.data.length > 0) {
+        setData(res.data);
+      } else {
+        setData([]);
+        setNotFound(true);
+      }
     } catch (error) {
+      toast.error("something went wrong.");
       console.log(error);
+      setData([]);
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function savsUser(user_id) {
+    setErrorMsg(null);
+    if (role === roles[0]) {
+      return setErrorMsg("please select role for this user");
+    } else {
+      setSavingUser(true);
+
+      try {
+        await api.post(`/authorized_users/create/`, {
+          user_id,
+          property_id: id,
+          role,
+        });
+        closeModal(false);
+        setChanged((p) => !p);
+        toast.success("user added");
+      } catch (error) {
+        console.log(error);
+        if (error.response.status === 401) {
+          setErrorMsg("user already exists");
+        } else {
+          setErrorMsg("something went wrong");
+        }
+      } finally {
+        setSavingUser(false);
+      }
     }
   }
 
@@ -46,7 +89,7 @@ export default function AddNewUser({ closeModal }) {
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0 }}
         onClick={(e) => e.stopPropagation()}
-        className="bg-white max-w-xl mx-auto lg:w-[80vw] w-[95vw] h-[90vh] lg:h-[93vh] rounded-xl p-3 shadow-md flex flex-col py-8 items-center gap-10 relative"
+        className="bg-white max-w-xl mx-auto lg:w-[80vw] w-[95vw] h-[90vh] lg:h-[93vh] rounded-xl p-3 shadow-md py-8 gap-10 relative"
       >
         <IoCloseCircleOutline
           onClick={() => closeModal(false)}
@@ -55,7 +98,7 @@ export default function AddNewUser({ closeModal }) {
 
         <h1 className="text-xl font-bold text-center">Authorize New User</h1>
 
-        <form className="flex gap-2 w-full" onSubmit={searchUser}>
+        <form className="flex gap-2 my-10" onSubmit={searchUser}>
           <input
             type="text"
             value={username}
@@ -72,28 +115,55 @@ export default function AddNewUser({ closeModal }) {
             {loading ? <Spinner /> : "Search"}
           </button>
         </form>
+
+        {/* results  */}
+        <div className="flex flex-col">
+          {notFound && (
+            <div className="h-full flex items-center text-center text-xl font-bold">
+              No user found with username {username}
+            </div>
+          )}
+
+          {data.map((item) => (
+            <div
+              key={item.user_id}
+              className="font-semibold px-3 bg-zinc-100 flex flex-col gap-10 border-2 border-gray-800 rounded-lg py-2"
+            >
+              <span className="text-2xl font-bold text-center pt-10">
+                User: {item.username}
+              </span>
+              <select
+                className="bg-gray-800 text-white p-2 rounded-md text-center"
+                name="role"
+                id="role"
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+              >
+                {roles.map((role) => (
+                  <option key={role} value={role}>
+                    {role}
+                  </option>
+                ))}
+              </select>
+
+              {errorMsg && (
+                <div className="text-lg text-red-500 border-2 border-red-500 rounded-lg py-2 text-center">
+                  {" "}
+                  {errorMsg}{" "}
+                </div>
+              )}
+
+              <button
+                onClick={() => savsUser(item.user_id)}
+                disabled={savingUser}
+                className="border-2 border-gray-800 bg-gray-800 text-white rounded-md py-2 font-semibold hover:bg-primary transition-all disabled:cursor-not-allowed disabled:opacity-90"
+              >
+                {savingUser ? <Spinner /> : "Save"}
+              </button>
+            </div>
+          ))}
+        </div>
       </motion.div>
     </div>
   );
 }
-
-const ListElement = ({ data, setSelected }) => {
-  return (
-    <div className="py-4 px-2 border-b flex items-center gap-5 w-full rounded-lg text-xs relative group">
-      <IoCloseCircle
-        onClick={() => setSelected(data.user)}
-        className="text-red-500 text-2xl opacity-0 group-hover:opacity-100 absolute top-[-5px] right-[-5px] transition-all hover:scale-150"
-        title="remove user"
-      />
-      <img
-        src={data.profile_photo}
-        alt=""
-        className="w-8 aspect-square rounded-full border-2 border-gray-700 object-cover"
-      />
-      <span className="w-52 font-semibold">{data?.username}</span>
-      <span className="w-full text-end font-medium underline">
-        {data?.date}
-      </span>
-    </div>
-  );
-};
