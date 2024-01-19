@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import APIkey from "./APIKey";
-import AuthorizedUsers from "./AuthorizedUsers";
-import AuthorizedDocs from "./AuthorizedDocs";
+import APIkey from "./API_Key/APIKey";
+import AuthorizedUsers from "./Auth_users/AuthorizedUsers";
+import AuthorizedDocs from "./Auth_Docs/AuthorizedDocs";
 
 export default function Settings() {
 	const [active, setActive] = useState("API Key");

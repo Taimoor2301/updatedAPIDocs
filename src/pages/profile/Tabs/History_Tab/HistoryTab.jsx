@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import useAxios from "../../../utils/useAxios";
-import Spinner from "../../../components/Spinner";
+import useAxios from "../../../../utils/useAxios";
+import Spinner from "../../../../components/Spinner";
 
 const HistoryTab = () => {
 	const [data, setData] = useState([]);

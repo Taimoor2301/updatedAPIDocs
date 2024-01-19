@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { FaArrowRight } from "react-icons/fa";
-import { useUserData } from "../../../utils/useUserData";
+import { useUserData } from "../../../../utils/useUserData";
 import toast, { Toaster } from "react-hot-toast";
-import useAxios from "../../../utils/useAxios";
-import { DataTemplate } from "../../../constants/dataTemplate";
+import useAxios from "../../../../utils/useAxios";
+import { DataTemplate } from "../../../../constants/dataTemplate";
 import { Country, State, City } from "country-state-city";
-import { useAuthStore } from "../../../store/auth";
-import Spinner from "../../../components/Spinner";
+import { useAuthStore } from "../../../../store/auth";
+import Spinner from "../../../../components/Spinner";
 // console.log(Country.getAllCountries().slice(0, 5));
 // console.log(State.getAllStates().slice(0, 5));
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { IoCloseCircleOutline } from "react-icons/io5";
-import useAxios from "../../../../../utils/useAxios";
+import useAxios from "../../../../../../utils/useAxios";
 
 const EditUserModal = ({ closeModel }) => {
 	const [loading, setLoading] = useState(false);

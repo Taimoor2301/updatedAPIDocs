@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import PaymentModel from "../Modal/PaymentModel";
+import PaymentModel from "../../Modal/PaymentModel";
 import { AnimatePresence } from "framer-motion";
 
 const WalletTab = () => {

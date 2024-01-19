@@ -34,25 +34,21 @@ const Login = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		setLoading(true);
+
 		const { error } = await login(username, password);
 		if (error) {
 			toast.error(error);
 			setLoading(false);
 		} else {
-			// Get the current URL
-			// Get the current endpoint or path
-			var currentEndpoint = window.location.pathname;
-
-			// Check if the pathname contains "auth"
-			// var containsAuth = currentEndpoint.includes("auth");
-			// if (containsAuth) {
-
 			navigate(from);
 			window.location.reload();
 			setLoading(false);
 			resetForm();
 		}
+		 setLoading(false)
 	};
+
+
 	return (
 		<form
 			onSubmit={handleSubmit}

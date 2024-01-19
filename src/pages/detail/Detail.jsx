@@ -127,7 +127,7 @@ export default function Detail() {
 					/>
 				)}
 			</AnimatePresence>
-			<AnimatePresence>{openAddUser && <AddNewUser closeModal={setOpenAddUser} />}</AnimatePresence>
+			<AnimatePresence>{openAddUser && <AddNewUser closeModal={setOpenAddUser}  />}</AnimatePresence>
 			<div className='bg-gray-100'>
 				<main className='max-w-7xl mx-auto lg:py-10 py-3 font-poppins grid grid-cols-2 lg:grid-cols-3 gap-4'>
 					<Column1

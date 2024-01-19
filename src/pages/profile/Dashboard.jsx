@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import ProfileTab from "./Tabs/ProfileTab";
-import ListingTab from "./Tabs/ListingTab";
-import HistoryTab from "./Tabs/HistoryTab";
-import WalletTab from "./Tabs/WalletTab";
+import ProfileTab from "./Tabs/Profile_Tab/ProfileTab";
+import ListingTab from "./Tabs/Listing_Tab/ListingTab";
+import HistoryTab from "./Tabs/History_Tab/HistoryTab";
+import WalletTab from "./Tabs/Wallet_Tab/WalletTab";
 import { useUserData } from "../../utils/useUserData";
 import { GrEdit } from "react-icons/gr";
 import Spinner from "../../components/Spinner";
