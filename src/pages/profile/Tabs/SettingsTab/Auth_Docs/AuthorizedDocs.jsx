@@ -49,9 +49,17 @@ export default function AuthorizedUsers({ users }) {
         </div>
 
         <>
-          {data.map((item, i) => (
-            <ListElement key={item.property_id} {...item} setAdded={setAdded} />
-          ))}
+          {data.length > 0 ? (
+            data.map((item, i) => (
+              <ListElement
+                key={item.property_id}
+                {...item}
+                setAdded={setAdded}
+              />
+            ))
+          ) : (
+            <div className="text-center font-semibold">No Documents</div>
+          )}
         </>
       </div>
     </div>
@@ -90,7 +98,9 @@ const ListElement = ({
           className="max-w-full object-cover"
         />
       </div>
-      <span className="w-52 font-semibold">{property_title}</span>
+      <span className="w-52 font-semibold lg:whitespace-nowrap">
+        {property_title}
+      </span>
 
       <span className="bg-gray-800 text-white p-1 text-xs mx-2 rounded">
         {role}

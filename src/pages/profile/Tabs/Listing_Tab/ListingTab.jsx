@@ -8,21 +8,25 @@ import { MdDeleteForever, MdEditSquare } from "react-icons/md";
 import toast, { Toaster } from "react-hot-toast";
 import EditDataModal from "../../Modal/EditDataModal";
 import ListingModal from "../../Modal/ListingModal";
+import Spinner from "../../../../components/Spinner";
 
 const ListingTab = () => {
   const [openAddNewModel, setOpenAddNewModel] = useState(false);
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [added, setAdded] = useState(true);
-  const [unListed, setUlisted] = useState(false);
 
   const api = useAxious();
 
   const getProperties = async () => {
     try {
+      setLoading(true);
       const response = await api.get("/properties");
       setData(response.data);
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -44,6 +48,14 @@ const ListingTab = () => {
   useEffect(() => {
     getProperties();
   }, [added]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center">
+        <Spinner />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-8">
@@ -67,31 +79,23 @@ const ListingTab = () => {
           <span className="w-52 font-semibold">Name</span>
           <span className="w-full text-end font-medium underline">Type</span>
         </div>
-        {unListed ? (
+        {
           <>
-            {data.map((item, i) => (
-              <ListElement
-                key={item.id}
-                index={i}
-                deleteProperty={deleteProperty}
-                setAdded={setAdded}
-                {...item}
-              />
-            ))}
+            {data.length > 0 ? (
+              data.map((item, i) => (
+                <ListElement
+                  key={item.id}
+                  index={i}
+                  deleteProperty={deleteProperty}
+                  setAdded={setAdded}
+                  {...item}
+                />
+              ))
+            ) : (
+              <div className="font-semibold text-center">No Documents</div>
+            )}
           </>
-        ) : (
-          <>
-            {data.map((item, i) => (
-              <ListElement
-                key={item.id}
-                index={i}
-                deleteProperty={deleteProperty}
-                setAdded={setAdded}
-                {...item}
-              />
-            ))}
-          </>
-        )}
+        }
       </div>
     </div>
   );
