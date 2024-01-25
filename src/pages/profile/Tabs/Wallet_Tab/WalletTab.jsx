@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import PaymentModel from "../../Modal/PaymentModel";
 import { AnimatePresence } from "framer-motion";
+import AddTokenToMetaMask from "./AddTowallet";
 
 const WalletTab = () => {
 	const balance = 9876554.33;
@@ -33,6 +34,7 @@ const WalletTab = () => {
 				<button className='text-lg bg-gray-800 text-white  hover:bg-primary font-poppins py-1.5 w-44 rounded-md transition-all duration-500'>
 					Convert
 				</button>
+				<AddTokenToMetaMask/>
 			</div>
 		</div>
 	);
