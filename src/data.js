@@ -1,48 +1,22 @@
 import {API_BASE_URL} from './utils/constants'
-const javascript = `const Code = function Home() {
-	return (
-		<div className='grid grid-cols-8'>
-			<Sidebar />
-			<HomeContent />
-			<div className='px-5 py-14 col-span-6 h-screen overflow-auto scroll'>
-				<h1 className='text-6xl font-poppins font-extrabold text-gray-800 my-10'>Content</h1>
-				{data.map((d) => (
-					<Element key={d.id} {...d} />
-				))}
-			</div>
-		</div>
-	);
-};`;
+let javascript , php , python;
+const dummyJson = {
+	"name": "Luke Skywalker",
+	"height": "172",
+	"mass": "77",
+	"hair_color": "blond",
+	"skin_color": "fair",
+	"eye_color": "blue",
+	"birth_year": "19BBY",
+	"gender": "male",
+	"homeworld": "https://swapi.dev/api/planets/1/",
+	"created": "2014-12-09T13:50:51.644000Z",
+	"edited": "2014-12-20T21:17:56.891000Z",
+	"url": "https://swapi.dev/api/people/1/"
+}
 
-const python = `# Solve the quadratic equation ax**2 + bx + c = 0
 
-# import complex math module
-import cmath
 
-a = 1
-b = 5
-c = 6
-
-# calculate the discriminant
-d = (b**2) - (4*a*c)
-
-# find two solutions
-sol1 = (-b-cmath.sqrt(d))/(2*a)
-sol2 = (-b+cmath.sqrt(d))/(2*a)
-
-print('The solution are {0} and {1}'.format(sol1,sol2))
-`;
-
-const php = `<!DOCTYPE html>
-<html>
-<body>
-
-<h1>Developer News</h1>
-
-<?php echo "The Best PHP Examples"; ?>
-
-</body>
-</html> `;
 
 export const data = [
 	{
@@ -55,7 +29,7 @@ export const data = [
 
 
 					,
-		python :pythonCode('properties'),
+		python :pythonCode('properties'), result: JSON.stringify(dummyJson)
 	},
 	{
 		title: "Get property details",

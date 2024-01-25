@@ -30,7 +30,15 @@ const HomeContent = () => {
   );
 };
 
-const Element = ({ title, description, javascript, python, php, id }) => {
+const Element = ({
+  title,
+  description,
+  javascript,
+  python,
+  php,
+  id,
+  result,
+}) => {
   const [activeCode, setActiveCode] = useState("javascript");
   const [copy, setCopy] = useState(false);
   const code =
@@ -38,6 +46,8 @@ const Element = ({ title, description, javascript, python, php, id }) => {
       ? javascript
       : activeCode === "python"
       ? python
+      : activeCode === "result"
+      ? result
       : php;
 
   function handleCopy() {
@@ -98,4 +108,4 @@ const Element = ({ title, description, javascript, python, php, id }) => {
   );
 };
 
-const codeOptions = ["javascript", "python", "php"];
+const codeOptions = ["javascript", "python", "php", "result"];
