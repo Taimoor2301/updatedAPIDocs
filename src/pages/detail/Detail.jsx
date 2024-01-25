@@ -15,6 +15,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { useEthersSigner } from "../../utils/EthSigner";
 import Column1 from "./Column1";
 import AddNewUser from "./Modal/AddUserModal";
+import BuyModal from "./Modal/BuyModal";
 
 export default function Detail() {
   const [data, setData] = useState([]);
@@ -32,6 +33,7 @@ export default function Detail() {
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [openAddUser, setOpenAddUser] = useState(false);
   const [changed, setChanged] = useState(false);
+  const [openBuyModel, setOpenBuyModel] = useState(false);
   const { id } = useParams();
   const api = useAxios();
 
@@ -81,7 +83,7 @@ export default function Detail() {
 
     if (!isConnected) {
       toast.error("please connect your wallet");
-      setLoadingTobuy(false)
+      setLoadingTobuy(false);
       return;
     }
     try {
@@ -104,11 +106,10 @@ export default function Detail() {
       toast.error(`${error.message != undefined ? error.message : error}`);
       console.log(error);
       setLoadingTobuy(false);
+    } finally {
+      setLoadingTobuy(false);
     }
-    setLoadingTobuy(false);
   }
-
-  useEffect(() => {}, []);
 
   useEffect(() => {
     isLoggedIn && fetchData();
@@ -137,6 +138,9 @@ export default function Detail() {
         {openAddUser && (
           <AddNewUser closeModal={setOpenAddUser} setChanged={setChanged} />
         )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {openBuyModel && <BuyModal closeModal={setOpenBuyModel} />}
       </AnimatePresence>
       <div className="bg-gray-100">
         <main className="max-w-7xl mx-auto lg:py-10 py-3 font-poppins grid grid-cols-2 lg:grid-cols-3 gap-4">
@@ -171,7 +175,7 @@ export default function Detail() {
                   href="#"
                   onClick={(e) => {
                     e.preventDefault();
-                    BuyWithEth();
+                    setOpenBuyModel(true);
                   }}
                   disabled={loadingTobuy}
                   className="border-2 border-primary text-gray-700
@@ -207,7 +211,7 @@ export default function Detail() {
                   href={`#`}
                   onClick={(e) => {
                     e.preventDefault();
-                    BuyWithEth();
+                    setOpenBuyModel(true);
                   }}
                   disabled={loadingTobuy}
                   className="border-2 border-primary text-gray-700
@@ -223,7 +227,7 @@ export default function Detail() {
             {!isAuthorized ? (
               <button
                 disabled={loadingTobuy}
-                onClick={BuyWithEth}
+                onClick={() => setOpenBuyModel(true)}
                 className="rounded-xl border-2 py-2 font-bold text-gray-700 border-primary hover:bg-primary hover:text-white transition-all duration-300"
               >
                 {loadingTobuy ? "Please wait..." : "Buy Now"}
