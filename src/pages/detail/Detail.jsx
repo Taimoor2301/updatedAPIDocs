@@ -81,7 +81,7 @@ export default function Detail() {
 
     if (!isConnected) {
       toast.error("please connect your wallet");
-      setLoading(false);
+      setLoadingTobuy(false)
       return;
     }
     try {
