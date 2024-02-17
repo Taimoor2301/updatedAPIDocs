@@ -2,5 +2,6 @@
 .navlinks a:hover {
 	color: white;
 	background-color: rgb(144, 201, 35);
+	background-color: rgb(144, 201, 35);
 	transition: all 0.5s ease;
 }

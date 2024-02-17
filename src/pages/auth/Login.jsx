@@ -34,19 +34,25 @@ const Login = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		setLoading(true);
-
-		const { error } = await login(username, password);
-		if (error) {
-			toast.error(error);
-			setLoading(false);
-		} else {
-			navigate(from);
-			window.location.reload();
-			setLoading(false);
-			resetForm();
+	  
+		try {
+		  const { error } = await login(username, password);
+	  
+		  if (error) {
+			throw new Error(error);
+		  }
+	  
+		  navigate(from);
+		  window.location.reload();
+		  resetForm();
+		} catch (error) {
+		  console.error("Login failed:", error.message);
+		  toast.error("An error occurred while logging in. Please try again.");
+		} finally {
+		  setLoading(false);
 		}
-		 setLoading(false)
-	};
+	  };
+	  
 
 
 	return (
@@ -65,7 +71,7 @@ const Login = () => {
 					User Name <FaUser className='text-2xl text-primary' />
 				</label>
 				<input
-					className='py-3.5 px-4 border-b-2 focus:outline-none'
+					className='py-3.5 px-4 border-b-2  focus:outline-none'
 					type='username'
 					name='username'
 					id='username'
@@ -86,7 +92,7 @@ const Login = () => {
 					/>
 				</label>
 				<input
-					className='py-3.5 px-4 border-b-2 focus:outline-none'
+					className='py-3.5 px-4 border-b-2  focus:outline-none'
 					type={type}
 					name='password'
 					id='password'
@@ -104,7 +110,7 @@ const Login = () => {
 				<Link
 					className='text-xs pt-2 underline'
 					to='/auth/forgetpassword'>
-					Forget Password?
+					Forgot Password?
 				</Link>
 			</div>
 
@@ -120,7 +126,7 @@ const Login = () => {
 				<Link
 					className='text-purple-500 font-medium'
 					to='/auth/signup'>
-					Signup
+					Sign up
 				</Link>
 			</div>
 		</form>

@@ -93,13 +93,16 @@ const Element = ({
           </span>
         </div>
         <SyntaxHighlighter
-          style={atomOneDark}
-          wrapLongLines="true"
-          wrapLines="true"
-          language={activeCode}
-          customStyle={{ padding: "25px" }}
+           style={atomOneDark}
+           wrapLongLines={true}
+           wrapLines={true}
+           language={activeCode === "result" ? "json" : activeCode}
+           customStyle={{ padding: "25px" }}
         >
-          {code}
+         
+        
+        {code}
+          
         </SyntaxHighlighter>
       </div>
 

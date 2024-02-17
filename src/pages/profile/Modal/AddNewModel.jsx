@@ -39,24 +39,36 @@ const AddNewModel = ({ closeModel, setAdded }) => {
 	const handlePostRequest = async () => {
 		try {
 			setLoading(true);
+			// Upload images
 			const imageLink = await getLink(image);
-			console.log("this is image link", imageLink);
-			const appraisalLink = appraisal && (await getLink(appraisal));
-			const deedLink = deed && (await getLink(deed));
-			const response = await api.post(`properties/`, { ...data, pictures: imageLink, appraisal: appraisalLink, deed_of_ownership: deedLink });
+			// Create FormData object for deed and appraisal
+			const formData = new FormData();
+			// Append other data to FormData
+			for (const key in data) {
+				formData.append(key, data[key]);
+			}
+			formData.append('deed_of_ownership', deed);
+			formData.append('appraisal', appraisal);
+			formData.append('pictures',imageLink);
+			// Make the API request
+			const response = await api.post(`properties/`, formData, {
+				headers: {
+					'Content-Type': 'multipart/form-data',
+				},
+			});
+
 			console.log(response.data);
 			toast.success("Successfully added property");
 			setLoading(false);
 			closeModel(false);
 			setAdded((prev) => !prev);
-			// Handle success, e.g., close the modal or show a success message
 		} catch (error) {
 			console.error("Error adding property:", error);
 			toast.error("Error adding property");
 			setLoading(false);
-			// Handle error, e.g., show an error message
 		}
 	};
+
 
 	return (
 		<motion.div
@@ -73,15 +85,19 @@ const AddNewModel = ({ closeModel, setAdded }) => {
 					onClick={() => closeModel(false)}
 				/>
 
-				<h1 className='text-lg font-poppins font-medium underline'>Add New Document</h1>
-
-				<div className='grid grid-cols-2 md:grid-cols-4 gap-5 text-sm font-poppins w-full overflow-auto flex-1'>
+				<h1 className='text-lg font-poppins font-medium underline'>Add Property</h1>
+				<form onSubmit={(e)=>{
+				e.preventDefault();
+				handlePostRequest(e)
+				}}>
+				<div className='grid grid-cols-2 md:grid-cols-4 gap-5 text-sm font-poppins w-full overflow-auto flex-1' style={{overflow:'auto'}}>
 					{/*  type  */}
 					<label
 						htmlFor=''
 						className='flex flex-col gap-1 col-span-1 items-start '>
-						Property Type
+						Property Type *
 						<select
+							required={true}
 							value={data.property_type}
 							className='border border-gray-400 rounded-lg p-1'
 							onChange={(e) => setData((prev) => ({ ...prev, property_type: e.target.value }))}>
@@ -92,32 +108,36 @@ const AddNewModel = ({ closeModel, setAdded }) => {
 
 					{/* location  */}
 					<label className='col-span-1 flex flex-col gap-1'>
-						Location
+						Location *
 						<div className='flex gap-2 flex-wrap'>
 							<input
+							required={true}
 								className='border rounded-lg border-gray-400 p-2 w-28'
 								type='number'
-								name='lattitude'
+								name='Lattitude'
 								value={data.latitude}
 								onChange={(e) => setData((p) => ({ ...p, latitude: e.target.value }))}
-								placeholder='lattitude'
+								placeholder='Latitude'
 							/>
 							<input
+								required={true}
 								className='border border-gray-400 rounded-lg p-2 w-28'
 								type='number'
-								name='longitude'
+								name='Longitude'
 								value={data.longitude}
 								onChange={(e) => setData((p) => ({ ...p, longitude: e.target.value }))}
-								placeholder='longitude'
+								placeholder='Longitude'
 							/>
 						</div>
 					</label>
 
 					{/* pics  */}
 					<label className='col-span-2 flex flex-col gap-2'>
-						Upload Pictures
+						Upload Pictures *
+						
 						<input
 							type='file'
+							required={true}
 							className='file:border-none file:p-1.5  file:rounded-tl-lg file:rounded-bl-lg border border-gray-400 rounded-lg file:bg-gray-800 file:text-white'
 							id='property_pictures'
 							onChange={(e) => setImage(e)}
@@ -126,12 +146,13 @@ const AddNewModel = ({ closeModel, setAdded }) => {
 
 					{/* title  */}
 					<label className='col-span-2 lg:grid-cols-1 flex flex-col gap-2'>
-						Title
+						Title *
 						<input
 							name='title'
+							required={true}
 							type='text'
 							value={data.title}
-							placeholder='title'
+							placeholder='Title'
 							className='rounded-lg border border-gray-400 p-2'
 							onChange={(e) => setData((prev) => ({ ...prev, title: e.target.value }))}
 						/>
@@ -139,25 +160,27 @@ const AddNewModel = ({ closeModel, setAdded }) => {
 
 					{/* description  */}
 					<label className='col-span-full flex flex-col gap-2'>
-						Property Description
+						Property Description *
 						<textarea
 							name='PropertyDescription'
+							required={true}
 							cols='20'
 							rows='5'
 							value={data.description}
-							placeholder='description...'
+							placeholder='Description'
 							className='rounded-lg border border-gray-400 p-2'
 							onChange={(e) => setData((prev) => ({ ...prev, description: e.target.value }))}></textarea>
 					</label>
 
 					{/* google code  */}
 					<label className='col-span-1 flex flex-col gap-2'>
-						Google Plus Code
+						Google Plus Code *
 						<input
 							name='googlePlusCode'
+							required={true}
 							type='text'
 							value={data.google_plus_code}
-							placeholder='google plus code...'
+							placeholder='Google Plus Code'
 							className='rounded-lg border border-gray-400 p-2'
 							onChange={(e) => setData((prev) => ({ ...prev, google_plus_code: e.target.value }))}
 						/>
@@ -165,51 +188,56 @@ const AddNewModel = ({ closeModel, setAdded }) => {
 
 					{/* Deed of ownership  */}
 					<label className='col-span-2 lg:col-span-1 flex flex-col gap-2'>
-						Deed of Ownership
+						Deed of Ownership *
 						<input
-							name='deedofownership'
+							name='Deedofownership'
+							required={true}
 							type='file'
 							className='file:border-none file:p-1.5  file:rounded-tl-lg file:rounded-bl-lg border border-gray-400 rounded-lg file:bg-gray-800 file:text-white'
-							onChange={(e) => setDeed(e)}
+							onChange={(e) => setDeed(e.target.files[0])}
 						/>
 					</label>
 
 					{/* appraisal  */}
 					<label className='col-span-2 lg:col-span-1 flex flex-col gap-2'>
-						Appraisal
+						Appraisal *
 						<input
-							name='appraisal'
+							name='Appraisal'
+							required={true}
 							type='file'
 							className='file:border-none file:p-1.5  file:rounded-tl-lg file:rounded-bl-lg border border-gray-400 rounded-lg file:bg-gray-800 file:text-white'
-							onChange={(e) => setAppraisal(e)}
+							onChange={(e) => setAppraisal(e.target.files[0])}
 						/>
 					</label>
 
 					{/* owner  */}
 					<label className='col-span-full flex flex-col gap-2'>
-						Owner
+						Owner *
 						<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2'>
 							<input
 								name='name'
+								required={true}
 								type='text'
 								value={data.owner_name}
-								placeholder='name...'
+								placeholder='Name'
 								className='rounded-lg border border-gray-400 p-2'
 								onChange={(e) => setData((prev) => ({ ...prev, owner_name: e.target.value }))}
 							/>
 							<input
 								name='address'
+								required={true}
 								type='text'
 								value={data.owner_address}
-								placeholder='address...'
+								placeholder='Address'
 								className='rounded-lg border border-gray-400 p-2'
 								onChange={(e) => setData((prev) => ({ ...prev, owner_address: e.target.value }))}
 							/>
 							<input
 								name='ownership'
+								required={true}
 								type='text'
 								value={data.owner_percentage}
-								placeholder='ownership %'
+								placeholder='Ownership %'
 								className='rounded-lg border border-gray-400 p-2'
 								onChange={(e) => setData((prev) => ({ ...prev, owner_percentage: e.target.value }))}
 							/>
@@ -219,15 +247,13 @@ const AddNewModel = ({ closeModel, setAdded }) => {
 					<button
 						disabled={loading}
 						className='p-2 disabled:opacity-70 disabled:cursor-not-allowed rounded-lg bg-gray-800 flex items-center justify-center text-white text-sm font-poppins font-medium gap-2 w-52 hover:bg-primary transition-all group h-12'
-						onClick={handlePostRequest}>
+						type="submit">
 						{loading ? "Please wait..." : "Submit"} <FaArrowRight className='group-hover:translate-x-2 transition-all' />
 					</button>
 				</div>
+				</form>
 			</motion.div>
-			<Toaster
-				position='bottom-center'
-				reverseOrder={false}
-			/>
+			
 		</motion.div>
 	);
 };

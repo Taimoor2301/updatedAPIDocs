@@ -2,6 +2,7 @@ import logo from "../assets/logo/logo-white.png";
 import { FaFacebook, FaTwitter, FaGooglePlus, FaLinkedin, FaPhoneAlt } from "react-icons/fa";
 import { MdEmail, MdMail } from "react-icons/md";
 import { FaLocationDot } from "react-icons/fa6";
+import toast from "react-hot-toast";
 
 const Footer = () => {
 	return (
@@ -13,8 +14,7 @@ const Footer = () => {
 						alt=''
 					/>
 					<p className='text-sm font-medium tracking-wide'>
-						Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad tempore accusamus dolorum quas aliquam. Iste soluta ipsum, qui cumque
-						reiciendis similique veniam, alias incidunt praesentium rerum illum voluptatem quaerat quibusdam aut sequi aliquid dolore!
+					Introducing JaguarPalace, your seamless crypto locker solution that allows you to effortlessly store, share, and secure your important documents. With a user-friendly interface, interact seamlessly with the appraisal process, connecting with authorities to receive real-time updates on your real estate transactions. Experience simplicity and efficiency in managing your documents while staying informed about every crucial detail in your real estate journey. JaguarPalace — where simplicity meets sophistication for a secure and connected real estate experience.
 					</p>
 					<span className='flex gap-2 items-center text-4xl'>
 						<a href='#'>
@@ -43,13 +43,13 @@ const Footer = () => {
 						<address>1808 Tortuga Central pakway ste 7786 Litora GM , USA</address>
 					</span>
 
-					<span className='flex flex-col gap-2'>
-						<span className='font-righteous flex gap-2 items-center text-lg uppercase'>
+					<a className='flex flex-col gap-2'href="tel:(555) 123-4567">
+						<span  className='font-righteous flex gap-2 items-center text-lg uppercase'>
 							<FaPhoneAlt className='text-primary' />
 							call us 24/7
 						</span>
-						<span>(+123) 456 789</span>
-					</span>
+						<span>(555) 123-4567</span>
+					</a>
 					<span className='flex flex-col gap-2'>
 						<span className='font-righteous text-lg flex items-center gap-2 uppercase'>
 							<MdMail className='text-primary' />
@@ -70,7 +70,9 @@ const Footer = () => {
 						placeholder='Enter Your Email'
 					/>
 
-					<button className='text-white text-lg font-righteous uppercase py-2 px-5 bg-primary hover:bg-transparent border-2 border-primary hover:border-white transition-all'>
+					<button onClick={()=>{
+					toast.success("Subscribed successfully")
+					}} className='text-white text-lg font-righteous uppercase py-2 px-5 bg-primary hover:bg-transparent border-2 border-primary hover:border-white transition-all'>
 						Subscribe
 					</button>
 				</div>

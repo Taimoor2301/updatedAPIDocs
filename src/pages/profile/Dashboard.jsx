@@ -31,7 +31,7 @@ const Profile = () => {
 		if (coverImage || (userData && userData.cover_image)) {
 			setCoverImageUrl(userData.cover_image);
 		}
-	}, [profileImage, userData]);
+	}, [coverImage, userData]);
 
 	const handleProfileImageChange = async (e, type) => {
 		const imageLink = await getLink(e);
@@ -47,6 +47,8 @@ const Profile = () => {
 			type === "profile" ? setProfileImageUrl(userData.profile_image) : setCoverImageUrl(userData.cover_image);
 		}
 	};
+	
+	
 
 	if (loading) {
 		return (
@@ -68,13 +70,26 @@ const Profile = () => {
 
 						<label
 							htmlFor='coverImage'
-							className='absolute z-[1000] bg-primary backdrop-blur-sm transition-all duration-300 flex justify-center items-center text-white font-poppins cursor-pointer lg:text-2xl top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] opacity-0 group-hover/cover:opacity-100 h-14 aspect-square rounded-full hover:scale-125 hover:bg-primary'>
+							className='absolute z-40 bg-primary backdrop-blur-sm transition-all duration-300 flex justify-center items-center text-white font-poppins cursor-pointer lg:text-2xl top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] opacity-0 group-hover/cover:opacity-100 h-14 aspect-square rounded-full hover:scale-125 hover:bg-primary'>
 							<GrEdit />
 							<input
 								type='file'
 								className='absolute hidden'
 								id='coverImage'
-								onChange={(e) => handleProfileImageChange(e, "cover")}
+								onChange={(e) => {
+									const file = e.target.files[0];
+
+									if (file) {
+									  const reader = new FileReader()
+									  reader.onload = (event) => {
+										const localUrl = event.target.result;
+										setCoverImageUrl(localUrl);
+									  }
+									  reader.readAsDataURL(file);
+									}
+								handleProfileImageChange(e, "cover")
+								
+								}}
 							/>
 						</label>
 
@@ -89,14 +104,27 @@ const Profile = () => {
 								className='absolute inset-0 z-[1000] bg-black/30 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-300 flex justify-center items-center text-white font-poppins cursor-pointer text-xs lg:text-lg'>
 								<GrEdit
 									className='hover:scale-150 transition-all'
-									title='change'
+									title='Change'
 								/>
 							</label>
 							<input
 								type='file'
 								className='absolute hidden'
 								id='profilePic'
-								onChange={(e) => handleProfileImageChange(e, "profile")}
+								onChange={(e) => {
+									const file = e.target.files[0];
+
+									if (file) {
+									  const reader = new FileReader()
+									  reader.onload = (event) => {
+										const localUrl = event.target.result;
+										setProfileImageUrl(localUrl);
+									  }
+									  reader.readAsDataURL(file);
+									}
+								handleProfileImageChange(e, "profile")
+								
+								}}
 							/>
 						</div>
 					</div>
@@ -117,10 +145,7 @@ const Profile = () => {
 					</div>
 				</div>
 
-				<Toaster
-					position='bottom-center'
-					reverseOrder={false}
-				/>
+				
 			</div>
 		);
 	}

@@ -52,7 +52,7 @@ export default function Column1({ data, setData, isAuthorized, propertyId }) {
         />
       </div>
 
-      <div className="flex justify-between items-center gap-5 text-gray-700">
+      <div className="flex justify-start items-center gap-5 text-gray-700">
         <h1 className="text-2xl md:text-3xl font-bold">
           {data.title || "Document Name"}
         </h1>
@@ -61,7 +61,7 @@ export default function Column1({ data, setData, isAuthorized, propertyId }) {
         </span>
       </div>
 
-      <div className="flex items-center gap-4 border-b-2 pb-6 text-gray-700 flex-wrap">
+      {/* <div className="flex items-center gap-4 border-b-2 pb-6 text-gray-700 flex-wrap">
         <span className="flex items-center gap-2 text-sm font-semibold">
           <FaBed className="text-2xl text-primary" /> 4 Bed
         </span>
@@ -78,7 +78,7 @@ export default function Column1({ data, setData, isAuthorized, propertyId }) {
           <FaGooglePlus className="text-2xl text-primary" /> Google Plus Code:{" "}
           {data.google_plus_code}
         </span>
-      </div>
+      </div> */}
 
       <iframe
         src={`https://www.google.com/maps/embed/v1/view?key=AIzaSyC9DCzt7dwG4YXxa2DwzqcwXr-uw7P4zzs&center=${data.latitude},${data.longitude}&zoom=10`}

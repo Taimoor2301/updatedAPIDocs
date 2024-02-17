@@ -12,13 +12,13 @@ const Home = () => {
 	return (
 		<main className='bg-gray-100'>
 			<Mainslider />
-			<Search />
+			{/* <Search /> */}
 			<Options />
-			<RecentProperties />
+			{/* <RecentProperties /> */}
 			<WhatAreYouLooking />
-			<ClientFeedback />
-			<RecentNews />
-			<RegisterNow />
+			{/* <ClientFeedback /> */}
+			{/* <RecentNews /> */}
+			{/* <RegisterNow /> */}
 		</main>
 	);
 };

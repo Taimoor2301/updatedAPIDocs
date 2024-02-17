@@ -5,12 +5,13 @@ import { IoEyeSharp } from "react-icons/io5";
 import axios from "axios";
 import { API_BASE_URL } from "../../utils/constants";
 import { login } from "../../utils/auth";
-import toast, { Toaster } from "react-hot-toast";
-
+import { MdQuestionMark } from "react-icons/md";
+import { toast } from "react-hot-toast";
 export default function NewPassword() {
 	const navigate = useNavigate();
 	const [email, setEmail] = useState(localStorage.getItem("forget_email"));
 	const [type, setType] = useState("password");
+	const [type2, setType2] = useState("password");
 
 	const [password, setPassword] = useState("");
 	const [verifyPass, setVerifyPass] = useState("");
@@ -19,7 +20,7 @@ export default function NewPassword() {
 	const matchPass = async (e) => {
 		e.preventDefault();
 		// check code logic here
-		if (password.length > 5 && verifyPass.length > 5) {
+		if (password.length > 8 && verifyPass.length > 8) {
 			if (password === verifyPass) {
 				setError({ status: false, msg: "" });
 
@@ -37,7 +38,9 @@ export default function NewPassword() {
 					}
 				} catch (error) {
 					console.log(error);
-					toast.error("something went wrong, please try again");
+					toast.error(error.response.data.error||"something went wrong, please try again");
+					console.log(password, verifyPass, email);
+				
 				}
 			} else setError((p) => ({ status: true, msg: "passwords do not match" }));
 		} else setError((p) => ({ msg: "password must be atleast 6 characters long", status: true }));
@@ -50,7 +53,7 @@ export default function NewPassword() {
 			<div className='text-center py-3 flex flex-col items-center gap-1'>
 				<FaUnlockAlt className='text-purple-500 text-6xl' />
 				<span className='text-xl md:text-5xl font-bold'>Enter New Password</span>
-				<span className='text-sm text-gray-500'>taimoorali4214@gmail.com</span>
+				{/* <span className='text-sm text-gray-500'>taimoorali4214@gmail.com</span> */}
 			</div>
 
 			<div className='flex flex-col gap-5 mt-10 mb-5'>
@@ -65,7 +68,7 @@ export default function NewPassword() {
 						/>
 					</label>
 					<input
-						className='py-3.5 px-4 border-b-2 focus:outline-none'
+						className={`py-3.5 px-4 border-b-2 focus:outline-none ${password.length >= 8 ? '' : 'text-red-500'}`}
 						type={type}
 						name='password'
 						id='password'
@@ -82,12 +85,12 @@ export default function NewPassword() {
 						Verify Password{" "}
 						<IoEyeSharp
 							className='text-2xl text-primary'
-							onClick={() => setType((prev) => (prev === "password" ? "text" : "password"))}
+							onClick={() => setType2((prev) => (prev === "password" ? "text" : "password"))}
 						/>
 					</label>
 					<input
-						className='py-3.5 px-4 border-b-2 focus:outline-none'
-						type={type}
+						className={`py-3.5 px-4 border-b-2 focus:outline-none ${password == verifyPass ? '' : 'text-red-500'}`}
+						type={type2}
 						name='password2'
 						id='password2'
 						required
@@ -96,7 +99,12 @@ export default function NewPassword() {
 					/>
 				</div>
 
-				{error.status && <p className='text-center text-red-500 font-poppins'>{error.msg}</p>}
+				{error.status && <p className='text-center text-red-500 font-poppins'>{error.msg} {verifyPass !== password ?
+					<span className="text-red-500 capitalize">Both Password Should be The Same</span> : ''
+				}</p>}
+				 <p className='text-xs w-52 text-red-500 font-poppins text-left'>{verifyPass !== password ?
+					<span className="text-red-500 capitalize">Both Password Should be The Same and at least 8 characters !</span> : ''
+				}</p>
 			</div>
 
 			<button
@@ -104,10 +112,7 @@ export default function NewPassword() {
 				className='bg-gray-800 text-white font-medium tracking-wide text-lg py-2 rounded-lg px-10 hover:bg-primary transition-all flex justify-center items-center gap-2 group'>
 				Change Password <FaArrowRight className='group-hover:translate-x-2 transition-all' />
 			</button>
-			<Toaster
-				position='bottom-right'
-				reverseOrder={false}
-			/>
+
 		</form>
 	);
 }

@@ -231,10 +231,7 @@ const ListingModal = ({ closeModel, setAdded, id }) => {
 					</div>
 				</div>
 			</motion.div>
-			<Toaster
-				position='bottom-center'
-				reverseOrder={false}
-			/>
+			
 		</motion.div>
 	);
 };

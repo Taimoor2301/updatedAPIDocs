@@ -135,31 +135,34 @@ const ListElement = ({
       <span className="w-[70px] md:w-8 text-xs bg-gray-800 text-white md:text-sm flex justify-center items-center aspect-square rounded-full">
         {index + 1}
       </span>
-      <span className="w-52 font-semibold">{owner_name}</span>
+      <span className="w-52 font-semibold">
+      {owner_name?.slice(0, 23)}{owner_name?.length > 23 && "..."}
+        
+      </span>
+      
       <div className="flex items-center gap-2 text-2xl">
         <Link to={`/details/${id}`}>
           <FaEye
-            title="view"
-            className="hover:scale-150 hover:-translate-y-1 transition-all duration-150 hover:text-gray-800"
+            title="View"
+            className="capitalize hover:scale-150 hover:-translate-y-1 transition-all duration-150 hover:text-gray-800"
           />
         </Link>
         <MdEditSquare
-          title="edit"
+          title="Edit"
           onClick={() => setOpenEditModal(true)}
-          className="hover:scale-150 hover:text-gray-800 hover:-translate-y-1 transition-all duration-150"
+          className="capitalize hover:scale-150 hover:text-gray-800 hover:-translate-y-1 transition-all duration-150"
         />
         <MdDeleteForever
           onClick={() => deleteProperty(id)}
-          className="hover:scale-150 hover:text-red-600 hover:-translate-y-1 transition-all duration-150"
-          title="delete"
+          className=" capitalize hover:scale-150 hover:text-red-600 hover:-translate-y-1 transition-all duration-150"
+          title="Delete"
         />
 
         <FaClipboardList
-          title="add to listing"
+          title="Add To Listing"
           onClick={() => setOpenListingModal(true)}
-          className={`hover:scale-150 hover:-translate-y-1 transition-all duration-150 ${
-            listed_on ? "text-blue-600" : ""
-          }`}
+          className={`capitalize hover:scale-150 hover:-translate-y-1 transition-all duration-150 ${listed_on ? "text-blue-600 " : ""
+            }`}
         />
       </div>
       <span className="text-end font-medium underline w-full">

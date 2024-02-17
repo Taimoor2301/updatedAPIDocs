@@ -1,6 +1,8 @@
 import { register } from "swiper/element/bundle";
 
 import "./slider.css";
+import { useAuthStore } from "../../store/auth";
+import { Link } from "react-router-dom";
 
 register();
 
@@ -32,6 +34,7 @@ const images = [
 ];
 
 const Slide = ({ img }) => {
+	const loggedIn = useAuthStore((state) => state.isLoggedIn)();
 	return (
 		<swiper-slide>
 			<div className='max-h-[80vh] relative'>
@@ -46,11 +49,15 @@ const Slide = ({ img }) => {
 						<h1 className='text-2xl md:text-7xl font-bold text-white tracking-wide font-righteous'>
 							Jaguar <span className='text-primary'>palace</span>
 						</h1>
-						<a
-							href='#recentProperties'
+						{loggedIn?<Link
+							to='/dashboard'
 							className='flex justify-center items-center text-sm md:text-2xl text-white bg-primary hover:scale-105 opacity-90 hover:opacity-100 transition-all duration-150 font-medium md:py-2.5 py-1 md:px-10 px-3'>
-							Properties
-						</a>
+							Dasboard
+						</Link>:<Link
+							to='/auth/signup'
+							className='flex justify-center items-center text-sm md:text-2xl text-white bg-primary hover:scale-105 opacity-90 hover:opacity-100 transition-all duration-150 font-medium md:py-2.5 py-1 md:px-10 px-3'>
+							Register
+						</Link>}
 					</div>
 				</div>
 			</div>

@@ -5,22 +5,37 @@ import { Link } from "react-router-dom";
 import useAxious from "../../../../../utils/useAxios";
 import { MdDeleteForever, MdEditSquare } from "react-icons/md";
 import toast, { Toaster } from "react-hot-toast";
-import AddUserModal from "./APIKeyModals/Add";
-import EditUserModal from "./APIKeyModals/Edit";
-
+import AddApiKey from "./APIKeyModals/Add";
+import { FaCopy } from "react-icons/fa";
+import copyToClipboard from 'elastic-copy-paste'
 export default function APIKey({ users }) {
 	const [openAddNewModel, setOpenAddNewModel] = useState(false);
 	const [data, setData] = useState([]);
+	const [loading, setLoading] = useState(false)
 
 	const api = useAxious();
 
 	const getProperties = async () => {
+		setLoading(true)
 		try {
-			const response = await api.get("/properties");
+			const response = await api.get("/apikey/list/");
 			setData(response.data);
+		} catch (error) {
+
+			console.log(error);
+		}
+		setLoading(false)
+	};
+
+	const generateApiKey = async (data) => {
+		setLoading(true)
+		try {
+			const response = await api.post("/apikey/create/", data);
+			getProperties()
 		} catch (error) {
 			console.log(error);
 		}
+		setLoading(false)
 	};
 
 	const deleteProperty = async (id) => {
@@ -38,6 +53,20 @@ export default function APIKey({ users }) {
 		}
 	};
 
+	const handleCopy=(textToCopy)=>{
+		copyToClipboard(textToCopy)
+		.then((success) => {
+			if (success) {
+				toast.success('Text copied successfully!');
+			} else {
+				toast.error('Failed to copy text.');
+			}
+		})
+		.catch((error) => {
+			toast.error('Error during copy:', error);
+		});
+	}
+
 	useEffect(() => {
 		getProperties();
 	}, []);
@@ -50,13 +79,14 @@ export default function APIKey({ users }) {
 				Add New <FaPlus className='group-hover:rotate-[270deg] transition-all duration-700' />
 			</button>
 
-			<AnimatePresence>{openAddNewModel && <AddUserModal closeModel={setOpenAddNewModel} />}</AnimatePresence>
+			<AnimatePresence>{openAddNewModel && <AddApiKey closeModel={setOpenAddNewModel} generate={generateApiKey} loading={loading} />}</AnimatePresence>
 
 			<div className='flex flex-col font-poppins'>
 				<div className='py-4 px-2 text-xs flex items-center gap-5 w-full bg-primary transition-all rounded-md border-2 border-gray-800 mb-5'>
-					<span className='font-semibold'>S.no</span>
 					<span className='w-52 font-semibold'>Name</span>
-					<span className='w-full text-end font-medium underline'>Type</span>
+					<span className='w-31 text-end font-medium underline'>Key</span>
+					<span className='w-52 text-end font-medium underline'>Actions</span>
+
 				</div>
 
 				<>
@@ -64,6 +94,7 @@ export default function APIKey({ users }) {
 						<ListElement
 							key={item.id}
 							index={i}
+							handleCopy={handleCopy}
 							deleteProperty={deleteProperty}
 							{...item}
 						/>
@@ -71,45 +102,31 @@ export default function APIKey({ users }) {
 				</>
 			</div>
 
-			<Toaster
-				position='bottom-center'
-				reverseOrder={false}
-			/>
+
 		</div>
 	);
 }
 
-const ListElement = ({ property_type, id, owner_name, index, deleteProperty }) => {
+const ListElement = ({ api_key, id, api_key_name, index, deleteProperty, write, handleCopy }) => {
 	const [openEditModal, setOpenEditModal] = useState(false);
 
 	return (
 		<div className='py-4 md:px-2 border-b flex items-center gap-5 w-full hover:bg-primary/50 transition-all rounded-lg  text-xs'>
-			<AnimatePresence>
-				{openEditModal && (
-					<EditUserModal
-						closeModel={setOpenEditModal}
-						id={id}
-					/>
-				)}
-			</AnimatePresence>
-
-			<span className='w-[70px] md:w-8 text-xs bg-gray-800 text-white md:text-sm flex justify-center items-center aspect-square rounded-full'>
-				{index + 1}
-			</span>
-			<span className='w-52 font-semibold'>{owner_name}</span>
+			<span className='w-52 font-semibold'>{api_key_name}</span>
+			<span className='w-52 font-semibold'>{api_key.slice(0, 3)}****{api_key.slice(29, 32)}({write ? 'Read/Write' : 'Read Only'})</span>
 			<div className='flex items-center gap-2 text-2xl'>
-				<MdEditSquare
-					title='edit'
-					onClick={() => setOpenEditModal(true)}
+				<FaCopy
+					title='Copy'
+					onClick={() => {handleCopy(api_key)}}
 					className='hover:scale-150 hover:text-gray-800 hover:-translate-y-1 transition-all duration-150'
 				/>
 				<MdDeleteForever
 					onClick={() => deleteProperty(id)}
 					className='hover:scale-150 hover:text-red-600 hover:-translate-y-1 transition-all duration-150'
-					title='delete'
+					title='Delete'
 				/>
 			</div>
-			<span className='text-end font-medium underline w-full'>{property_type}</span>
+
 		</div>
 	);
 };

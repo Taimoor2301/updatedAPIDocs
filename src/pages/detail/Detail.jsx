@@ -7,7 +7,7 @@ import Spinner from "../../components/Spinner";
 import { AnimatePresence } from "framer-motion";
 import SendEmailModal from "./Modal/SendEmail";
 import { useAuthStore } from "../../store/auth";
-import { API_BASE_URL } from "../../utils/constants";
+import { API_BASE_URL, MarketAddress, TokenAddress, approveAbi } from "../../utils/constants";
 import { ethers } from "ethers";
 import Contract from "../../utils/useContract";
 import { useAccount } from "wagmi";
@@ -110,6 +110,41 @@ export default function Detail() {
       setLoadingTobuy(false);
     }
   }
+  
+  async function BuyWithToken() {
+    setLoadingTobuy(true);
+
+    if (!isConnected) {
+      toast.error("please connect your wallet");
+      setLoadingTobuy(false);
+      return;
+    }
+    try {
+      const token = new ethers.Contract(TokenAddress, approveAbi, signer)
+      token.approve(MarketAddress, true)
+      const contract = await Contract(provider);
+      const ethValue = ethers.parseUnits(
+        listingData?.price_in_eth?.toString(),
+        "ether"
+      );
+      const tokenval = ethers.parseUnits(
+        listingData?.price_in_token?.toString(),
+        "ether"
+      );
+      console.log(ethValue);
+      const tx = await contract.buyWithToken(id, { value: ethValue });
+      await tx.wait();
+      await api.post("autorize/", { id: id });
+      toast.success("bought successfully");
+      fetchData();
+    } catch (error) {
+      toast.error(`${error.message != undefined ? error.message : error}`);
+      console.log(error);
+      setLoadingTobuy(false);
+    } finally {
+      setLoadingTobuy(false);
+    }
+  }
 
   useEffect(() => {
     isLoggedIn && fetchData();
@@ -140,7 +175,7 @@ export default function Detail() {
         )}
       </AnimatePresence>
       <AnimatePresence>
-        {openBuyModel && <BuyModal closeModal={setOpenBuyModel} />}
+        {openBuyModel && <BuyModal closeModal={setOpenBuyModel} buyEth={BuyWithEth} buyToken={BuyWithToken} />}
       </AnimatePresence>
       <div className="bg-gray-100">
         <main className="max-w-7xl mx-auto lg:py-10 py-3 font-poppins grid grid-cols-2 lg:grid-cols-3 gap-4">
@@ -269,9 +304,16 @@ export default function Detail() {
 
 const ListElement = ({ data, selected, setSelected }) => {
   const isSeleted = Boolean(selected.find((el) => el.user === data.user));
+  const handleClick = () => {
+    try {
+      setSelected(data.user)
+    } catch (error) {
+      console.log(error)
+    }
+  }  
   return (
     <div
-      onClick={() => setSelected(data.user)}
+      onClick={handleClick}
       className="py-4 px-2 cursor-pointer border-b flex items-center gap-5 w-full hover:bg-primary/50 transition-all rounded-lg text-xs"
     >
       <input type="checkbox" readOnly checked={isSeleted} />

@@ -92,7 +92,7 @@ export default function AuthorizedUsers({ users }) {
         </>
       </div>
 
-      <Toaster position="bottom-center" reverseOrder={false} />
+   
     </div>
   );
 }

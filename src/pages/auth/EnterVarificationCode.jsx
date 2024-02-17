@@ -72,7 +72,7 @@ export default function EnterVarificationCode() {
 					onChange={(e) => setCode(e.target.value)}
 					name='verificationCode'
 					id='verificationCode'
-					placeholder='code'
+					placeholder='Code'
 					required
 				/>
 
@@ -106,10 +106,7 @@ export default function EnterVarificationCode() {
 				className='bg-gray-800 text-white font-medium tracking-wide text-lg py-2 rounded-lg px-10 hover:bg-primary transition-all flex justify-center items-center gap-2 group'>
 				{loading ? <Spinner /> : "Submit"} {!loading && <FaArrowRight className='group-hover:translate-x-2 transition-all' />}
 			</button>
-			<Toaster
-				position='bottom-right'
-				reverseOrder={false}
-			/>
+			
 		</form>
 	);
 }

@@ -73,7 +73,7 @@ const GetEmail = () => {
 				type='submit'
 				disabled={loading}
 				className='hover:bg-primary text-white font-medium tracking-wide text-lg py-2 rounded-lg px-10 bg-gray-800 transition-all flex justify-center items-center gap-2 group disabled:opacity-80 disabled:cursor-not-allowed'>
-				{loading ? <Spinner /> : "Signup"} {!loading && <FaArrowRight className='group-hover:translate-x-2 transition-all' />}
+				{loading ? <Spinner /> : "Sign Up"} {!loading && <FaArrowRight className='group-hover:translate-x-2 transition-all' />}
 			</button>
 
 			<div>
@@ -81,14 +81,10 @@ const GetEmail = () => {
 				<Link
 					className='text-purple-500 font-medium'
 					to='/auth/login'>
-					Sign in
+					Login
 				</Link>
 			</div>
 
-			<Toaster
-				position='bottom-right'
-				reverseOrder={false}
-			/>
 		</form>
 	);
 };

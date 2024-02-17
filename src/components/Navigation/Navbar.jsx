@@ -6,16 +6,31 @@ import { FaLinkedin, FaFacebook, FaGooglePlus, FaTwitter, FaBars } from "react-i
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { IoMdClose } from "react-icons/io";
 import logo from "../../assets/logo/logo.svg";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAuthStore } from "../../store/auth";
 import { logout } from "../../utils/auth";
 
 const Navbar = () => {
 	const [navOpen, setNavOpen] = useState(false);
+	const isLoggedIn = useAuthStore((state) => state.isLoggedIn)();
+	const navbarRef = useRef(null);
+	useEffect(() => {
+		const handleClickOutside = (event) => {
+			if (navbarRef.current && !navbarRef.current.contains(event.target)) {
+				setNavOpen(false);
+			}
+		};
+
+		document.addEventListener('mousedown', handleClickOutside);
+
+		return () => {
+			document.removeEventListener('mousedown', handleClickOutside);
+		};
+	}, []);
 	return (
-		<div className='sticky top-0 z-[999] bg-white'>
+		<div className='sticky top-0 z-[999] bg-white' ref={navbarRef}>
 			<SubNav />
-			<nav className='px-5 xl:px-0 max-w-7xl flex justify-between items-center gap-3 py-1.5 mx-auto font-righteous bg-white'>
+			<nav className='px-5 xl:px-0 max-w-7xl flex justify-between items-left gap-3 py-1.5 mx-auto font-righteous bg-white'>
 				<div>
 					<Link to='/'>
 						<img
@@ -51,6 +66,17 @@ const Navbar = () => {
 						className='grid place-content-center py-2 px-3'>
 						Privacy Policy
 					</NavLink>
+					{isLoggedIn &&
+						<NavLink
+							to={'/auth/login'}
+							onClick={() => {
+								setNavOpen(false)
+								logout()
+							}}
+							className='grid place-content-center py-2 px-3'>
+							Logout
+						</NavLink>
+					}
 				</div>
 				<div className='lg:flex hidden items-center gap-1'>
 					<ConnectButton />
@@ -62,7 +88,7 @@ const Navbar = () => {
 				</div>
 			</nav>
 			<div className={`lg:hidden transition-all duration-300 overflow-hidden ${!navOpen ? "h-0" : "h-[370px] border-b-2"}`}>
-				<div className='text-x flex flex-col py-3 gap-5 font-righteous navlinks'>
+				<div className='text-x flex flex-col py-3 gap-5 font-righteous navlinks items-start'>
 					<NavLink
 						to={"/"}
 						onClick={() => setNavOpen(false)}
@@ -93,6 +119,17 @@ const Navbar = () => {
 						className='grid place-content-center py-2 px-3'>
 						Privacy Policy
 					</NavLink>
+					{isLoggedIn &&
+						<NavLink
+							to={'/auth/login'}
+							onClick={() => {
+								setNavOpen(false)
+								logout()
+							}}
+							className='grid place-content-center py-2 px-3'>
+							Logout
+						</NavLink>
+					}
 
 					<div className='flex justify-center items-center gap-1'>
 						<ConnectButton />
@@ -107,25 +144,25 @@ export default Navbar;
 
 const SubNav = () => {
 	const isLoggedIn = useAuthStore((state) => state.isLoggedIn)();
-	const  allUserData= useAuthStore((state) => state.getAllUserData)();
-	
+	const allUserData = useAuthStore((state) => state.getAllUserData)();
+
 	const [loggedIn, setLoggedIn] = useState(isLoggedIn);
-	
+
 
 	useEffect(() => {
-		if (allUserData !==null) {
+		if (allUserData !== null) {
 			setLoggedIn(true);
 		}
 	}, [allUserData]);
 
 	return (
-		<div className='bg-black font-righteous text-gray-300  py-1'>
+		<div className='bg-black font-righteous text-gray-300  py-1 z-50'>
 			<div className='max-w-7xl mx-auto flex px-5 xl:px-0 md:flex-row gap-1 items-center justify-evenly md:justify-between flex-wrap'>
 				<span className='flex items-center gap-2 text-xs md:text-md'>
 					<FaPhoneAlt />
 					Need Support ? +411-555-555-5
 				</span>
-				{!loggedIn ? (
+				{!loggedIn && (
 					<span>
 						<Link
 							to={"/auth/login"}
@@ -134,12 +171,6 @@ const SubNav = () => {
 							Login/Registration
 						</Link>
 					</span>
-				) : (
-					<button
-						onClick={() => logout()}
-						className='flex items-center text-xs md:text-md gap-2'>
-						Logout
-					</button>
 				)}
 				<span className='flex gap-2 items-center md:text-4xl'>
 					<a href='#'>

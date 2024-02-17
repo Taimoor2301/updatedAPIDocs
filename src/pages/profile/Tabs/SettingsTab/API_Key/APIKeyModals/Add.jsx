@@ -2,23 +2,28 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import useAxios from "../../../../../../utils/useAxios";
+import { useForm } from 'react-hook-form';
 
-const AddUserModal = ({ closeModel }) => {
-	const [loading, setLoading] = useState(false);
-	const [userId, setUserId] = useState("");
+const AddApiKey = ({ closeModel, generate, loading }) => {
+	// const [userId, setUserId] = useState("");
 	const [data, setData] = useState("");
 	const api = useAxios();
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm();
+
+	const onSubmit = (data) => {
+		// Your submit logic here
+		generate(data);
+	};
 
 	useEffect(() => {
 		document.body.style.overflowY = "hidden";
 		return () => (document.body.style.overflowY = "auto");
 	}, []);
 
-	async function searchUser(e) {
-		e.preventDefault();
-		setLoading(true);
-		alert(userId);
-	}
 
 	return (
 		<div
@@ -35,24 +40,39 @@ const AddUserModal = ({ closeModel }) => {
 					onClick={() => closeModel(false)}
 				/>
 
-				<p className='text-lg font-poppins font-medium underline'>Add New User</p>
+				<p className='text-lg font-poppins font-medium underline'>Create New ApiKey</p>
 
-				<form
-					className='flex gap-2 justify-center w-full'
-					onSubmit={searchUser}>
-					<input
-						type='text'
-						value={userId}
-						onChange={(e) => setUserId(e.target.value)}
-						placeholder='Enter User ID'
-						className='p-2 flex-1 rounded-md border border-gray-700 bg-gray-50'
-					/>
+				<form onSubmit={handleSubmit(onSubmit)} className='flex flex-col items-center w-full'>
+					<div>
+						<label className='col-span-full flex flex-col gap-2'>
+							Enter Api Key Name
+						</label>
+						<input
+							{...register('key_name', { required: true })}
+							placeholder='Enter Key Name'
+							className='p-2 rounded-md border border-gray-700 bg-gray-50 mb-4'
+						/>
+					</div>
+					{errors.userId && <p>User ID is required.</p>}
+
+					<div className='flex gap-2'>
+
+						<label className='col-span-full flex flex-col gap-2'>
+
+							Write
+						</label>
+						<input
+							type='checkbox'
+							{...register('write')}
+						/>
+					</div>
 
 					<button
 						type='submit'
 						disabled={loading}
-						className='text-white font-medium bg-gray-800 hover:bg-primary disabled:hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-80 px-4 py-2 rounded text-lg transition-all w-[10rem] max-h-full'>
-						{loading ? <Spinner /> : "Search"}
+						className='bg-primary text-white p-2 rounded-md mt-4'
+					>
+						Generate
 					</button>
 				</form>
 			</motion.div>
@@ -60,4 +80,4 @@ const AddUserModal = ({ closeModel }) => {
 	);
 };
 
-export default AddUserModal;
+export default AddApiKey;

@@ -22,9 +22,9 @@ const DetailItem = ({ Icon, heading, detail, link }) => {
 				{heading}
 			</Link>
 			<p className='text-gray-500 text-sm tracking-wide'>{detail}</p>
-			<Link className='font-righteous text-primary' to={link}>
+			{/* <Link className='font-righteous text-primary' to={link}>
 				Read more
-			</Link>
+			</Link> */}
 		</div>
 	);
 };

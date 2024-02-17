@@ -115,7 +115,7 @@ export default function SendEmailModal({ data, closeModal, setSelected }) {
           </div>
         </div>
       </motion.div>
-      <Toaster position="bottom-center" reverseOrder={false} />
+      
     </motion.div>
   );
 }

@@ -12,8 +12,8 @@ const EditDataModal = ({ closeModel, setAdded, id, updater }) => {
 
   const dataTemplate = {
     title: "",
-    property_type: "commercial",
-    location: "abc",
+    property_type: "",
+    location: "",
     description: "",
     pictures: "",
     latitude: "",
@@ -45,12 +45,11 @@ const EditDataModal = ({ closeModel, setAdded, id, updater }) => {
       setFetchingData(true);
       const response = await api.get(`properties/${id}`);
       setData(response.data);
-      // console.log(response.data);
       setFetchingData(false);
     } catch (error) {
       console.log(error);
       setFetchingData(false);
-      toast.error("something went wong");
+      toast.error("something went wrong");
     }
   };
 
@@ -63,26 +62,34 @@ const EditDataModal = ({ closeModel, setAdded, id, updater }) => {
     try {
       setLoading(true);
       const imageLink = image ? await getLink(image) : null;
-      const appraisalLink = appraisal ? await getLink(appraisal) : null;
-      const deedLink = deed ? await getLink(deed) : null;
+      const formData = new FormData();
 
-      const response = await api.put(`properties/${id}/`, {
-        ...data,
-        pictures: imageLink || data.pictures,
-        appraisal: appraisalLink || data.appraisal,
-        deed_of_ownership: deedLink || data.deed_of_ownership,
+      for (const key in data) {
+        formData.append(key, data[key]);
+      }
+      if (deed) {
+        formData.append('deed_of_ownership', deedLink);
+      }
+      if (appraisal) {
+        formData.append('appraisal', appraisal);
+      }
+      if (imageLink) {
+        formData.append('pictures', imageLink);
+      }
+      const response = await api.put(`properties/${id}/`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        }
       });
       console.log(response.data);
       toast.success("Successfully added property");
       setLoading(false);
       closeModel(false);
       setAdded((prev) => !prev);
-      // Handle success, e.g., close the modal or show a success message
     } catch (error) {
       console.error("Error adding property:", error);
       toast.error("Error adding property");
       setLoading(false);
-      // Handle error, e.g., show an error message
     }
   };
 
@@ -131,8 +138,8 @@ const EditDataModal = ({ closeModel, setAdded, id, updater }) => {
                   }))
                 }
               >
-                <option value="commercial">Commercial</option>
-                <option value="residential">Residential</option>
+                <option value="Commercial">Commercial</option>
+                <option value="Residential">Residential</option>
               </select>
             </label>
 
@@ -148,7 +155,7 @@ const EditDataModal = ({ closeModel, setAdded, id, updater }) => {
                   onChange={(e) =>
                     setData((p) => ({ ...p, latitude: e.target.value }))
                   }
-                  placeholder="lattitude"
+                  placeholder="Lattitude"
                 />
                 <input
                   className="border border-gray-400 rounded-lg p-2 w-28"
@@ -158,7 +165,7 @@ const EditDataModal = ({ closeModel, setAdded, id, updater }) => {
                   onChange={(e) =>
                     setData((p) => ({ ...p, longitude: e.target.value }))
                   }
-                  placeholder="longitude"
+                  placeholder="Longitude"
                 />
               </div>
             </label>
@@ -181,7 +188,7 @@ const EditDataModal = ({ closeModel, setAdded, id, updater }) => {
                 required
                 type="text"
                 value={data.title}
-                placeholder="title"
+                placeholder="Title"
                 className="rounded-lg border border-gray-400 p-2"
                 onChange={(e) =>
                   setData((prev) => ({ ...prev, title: e.target.value }))
@@ -197,7 +204,7 @@ const EditDataModal = ({ closeModel, setAdded, id, updater }) => {
                 cols="20"
                 rows="5"
                 value={data.description}
-                placeholder="description..."
+                placeholder="Description..."
                 className="rounded-lg border border-gray-400 p-2"
                 onChange={(e) =>
                   setData((prev) => ({ ...prev, description: e.target.value }))
@@ -212,7 +219,7 @@ const EditDataModal = ({ closeModel, setAdded, id, updater }) => {
                 type="text"
                 required
                 value={data.google_plus_code}
-                placeholder="google plus code..."
+                placeholder="Google Plus Code..."
                 className="rounded-lg border border-gray-400 p-2"
                 onChange={(e) =>
                   setData((prev) => ({
@@ -229,7 +236,7 @@ const EditDataModal = ({ closeModel, setAdded, id, updater }) => {
               <input
                 type="file"
                 className="file:border-none file:text-white file:bg-gray-800 file:p-1.5 border border-gray-400 rounded-lg file:hover:bg-primary file:transition-all"
-                onChange={(e) => setDeed(e)}
+                onChange={(e) => setDeed(e.target.files[0])}
               />
             </label>
 
@@ -239,7 +246,7 @@ const EditDataModal = ({ closeModel, setAdded, id, updater }) => {
               <input
                 type="file"
                 className="file:border-none file:text-white file:bg-gray-800 file:p-1.5 border border-gray-400 rounded-lg file:hover:bg-primary file:transition-all"
-                onChange={(e) => setAppraisal(e)}
+                onChange={(e) => setAppraisal(e.target.files[0])}
               />
             </label>
 
@@ -251,7 +258,7 @@ const EditDataModal = ({ closeModel, setAdded, id, updater }) => {
                   required
                   type="text"
                   value={data.owner_name}
-                  placeholder="name..."
+                  placeholder="Name..."
                   className="rounded-lg border border-gray-400 p-2"
                   onChange={(e) =>
                     setData((prev) => ({ ...prev, owner_name: e.target.value }))
@@ -261,7 +268,7 @@ const EditDataModal = ({ closeModel, setAdded, id, updater }) => {
                   type="text"
                   required
                   value={data.owner_address}
-                  placeholder="address..."
+                  placeholder="Address..."
                   className="rounded-lg border border-gray-400 p-2"
                   onChange={(e) =>
                     setData((prev) => ({
@@ -274,7 +281,7 @@ const EditDataModal = ({ closeModel, setAdded, id, updater }) => {
                   type="text"
                   required
                   value={data.owner_percentage}
-                  placeholder="ownership %"
+                  placeholder="Ownership %"
                   className="rounded-lg border border-gray-400 p-2"
                   onChange={(e) =>
                     setData((prev) => ({
@@ -293,7 +300,7 @@ const EditDataModal = ({ closeModel, setAdded, id, updater }) => {
                 rows="5"
                 required
                 value={data.update_summary}
-                placeholder="summary of update..."
+                placeholder="Summary of Update..."
                 className="rounded-lg border border-gray-400 p-2"
                 onChange={(e) =>
                   setData((prev) => ({

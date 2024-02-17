@@ -1,55 +1,52 @@
-export default function Privacy() {
-	return (
-		<div className=''>
-			<div className='max-w-7xl mx-auto px-5 py-10 lg:px-0'>
-				<h1 className='text-5xl font-righteous py-10'>Privacy Policy</h1>
+// PrivacyPolicy.js
+import React from 'react';
 
-				<div className='text-lg tracking-wide'>
-					<Heading>Welcome to Jaguar Palace – Your Gateway to Real Estate Excellence</Heading>
-					<Paragraph>
-						At Jaguar Palace, we believe in more than just buying and selling properties; we believe in transforming dreams into reality. Our journey
-						began with a simple yet profound vision: to redefine the real estate experience. Today, we stand as a testament to that vision, having
-						evolved into a dynamic platform that goes beyond transactions, creating lasting connections within the realm of property.
-					</Paragraph>
-				</div>
+const PrivacyPolicy = () => {
+    return (
+        <div className="container mx-auto mt-8 p-8 bg-white shadow-lg rounded-lg">
+            <h1 className="text-3xl font-semibold mb-4">JaguarPalace Crypto Website Document Locker - Privacy Policy</h1>
 
-				<Heading>Our Story</Heading>
+            {/* <p className="text-gray-700 mb-6">Last Updated: [Date]</p> */}
 
-				<Paragraph>
-					Jaguar Palace was born from a passion for real estate and a desire to simplify the property journey. Established [insert founding year], our
-					founders envisioned a space where buyers and sellers could seamlessly connect, where dreams of a perfect home or a lucrative investment
-					could find a welcoming reality. From the inception, we set out to be more than just a marketplace—we aimed to be a trusted partner in your
-					real estate endeavors.
-				</Paragraph>
-				<Heading>Our Mission</Heading>
+            <p className="mb-6">Welcome to JaguarPalace, your trusted platform for securing and managing your important
+                documents through cutting-edge cryptographic technology. This Privacy Policy is designed to inform you
+                about how we collect, use, disclose, and safeguard your personal information when you use our website
+                and services.</p>
 
-				<Paragraph>
-					At the core of Jaguar Palace is a mission to redefine the way people buy and sell properties. We strive to create a platform that empowers
-					individuals, whether they are first-time buyers, seasoned investors, or those looking to sell their cherished property. Our commitment is to
-					provide a transparent, user-friendly, and reliable space where your real estate aspirations can flourish.
-				</Paragraph>
-				<Heading>The Jaguar Palace Experience</Heading>
+            <div className="mb-6">
+                <h2 className="text-xl font-semibold mb-2">1. Information We Collect</h2>
 
-				<Paragraph>
-					Embark on a journey with Jaguar Palace, and discover a world where your property dreams become a reality. Whether you're looking to buy your
-					dream home, sell a property close to your heart, or invest in the next big opportunity, we are here to guide you.
-				</Paragraph>
-				<Heading>Join the Jaguar Palace Family</Heading>
+                <p className="mb-2">**1.1 Personal Information:**</p>
+                <ul className="list-disc ml-6">
+                    <li>**Account Information:** When you create a JaguarPalace account, we collect your name, email
+                        address, and password.</li>
+                    <li>**Document Information:** In the course of using our services, you may upload and store
+                        documents on our platform. JaguarPalace employs encryption techniques to secure your
+                        documents, ensuring confidentiality.</li>
+                </ul>
 
-				<Paragraph>
-					As we continue to redefine the real estate landscape, we invite you to be a part of the Jaguar Palace family. Explore the possibilities,
-					connect with our vibrant community, and let us be the bridge that turns your real estate aspirations into achievements. At Jaguar Palace,
-					it's not just about properties; it's about building futures, one dream at a time. Welcome to Jaguar Palace – Where Dreams Find Their Home.
-				</Paragraph>
-			</div>
-		</div>
-	);
-}
+                <p className="mb-2">**1.2 Usage Information:**</p>
+                <ul className="list-disc ml-6">
+                    <li>**Log Data:** We automatically collect certain information when you access JaguarPalace,
+                        including your IP address, browser type, operating system, and the pages you view.</li>
+                    <li>**Cookies:** JaguarPalace uses cookies to enhance your experience, personalize content, and
+                        analyze usage patterns. You can manage cookie preferences through your browser settings.</li>
+                </ul>
+            </div>
 
-const Heading = ({ children }) => {
-	return <h2 className='font-righteous text-gray-800 my-5'>{children}</h2>;
+            {/* Additional sections omitted for brevity */}
+
+            <div className="mb-6">
+                <h2 className="text-xl font-semibold mb-2">7. Contact Us</h2>
+                <p>If you have any questions, concerns, or feedback regarding this Privacy Policy, please contact us at
+                    <a href="mailto:contact@jaguarpalace.com" className="text-blue-500">contact@jaguarpalace.com</a>.
+                </p>
+            </div>
+
+            <p className="mt-4">Thank you for choosing JaguarPalace as your trusted document locker. Your privacy and
+                security are our top priorities.</p>
+        </div>
+    );
 };
 
-const Paragraph = ({ children }) => {
-	return <p>{children}</p>;
-};
+export default PrivacyPolicy;

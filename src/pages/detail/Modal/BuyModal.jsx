@@ -7,13 +7,8 @@ import { useParams } from "react-router-dom";
 import Spinner from "../../../components/Spinner";
 import useAxios from "../../../utils/useAxios";
 
-export default function BuyModal({ closeModal, setChanged }) {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const roles = ["Select Role", "Appraiser", "Agent", "Buyer"];
+export default function BuyModal({ closeModal, setChanged,loadinToBuy, buyEth, buyToken, priceEth,priceToken }) {
   const { id } = useParams();
-
-  const api = useAxios();
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -40,10 +35,10 @@ export default function BuyModal({ closeModal, setChanged }) {
         <h1 className="text-xl font-bold text-center">Select Method</h1>
 
         <div className="flex gap-4 flex-col h-full justify-center">
-          <button className="rounded bg-gray-800 text-white font-semibold border-2 border-gray-800 py-2 hover:bg-primary transition-all ease-out">
-            Buy With Eath
+          <button className="rounded bg-gray-800 text-white font-semibold border-2 border-gray-800 py-2 hover:bg-primary transition-all ease-out" onClick={buyEth}>
+            Buy With Eth
           </button>
-          <button className="rounded bg-primary font-semibold border-2 border-gray-800 py-2 hover:bg-primary transition-all ease-out">
+          <button className="rounded bg-primary font-semibold border-2 border-gray-800 py-2 hover:bg-primary transition-all ease-out" onClick={buyToken}>
             Buy With Token
           </button>
         </div>

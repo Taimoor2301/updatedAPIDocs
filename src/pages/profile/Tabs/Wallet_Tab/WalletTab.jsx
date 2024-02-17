@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import PaymentModel from "../../Modal/PaymentModel";
 import { AnimatePresence } from "framer-motion";
 import AddTokenToMetaMask from "./AddTowallet";
+import useWallet from "../../../../utils/useWallet";
 
 const WalletTab = () => {
-	const balance = 9876554.33;
+	const {balance}=useWallet()
 	const [openModel, setOpenModel] = useState(false);
 
 	useEffect(() => {

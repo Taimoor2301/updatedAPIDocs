@@ -4,7 +4,7 @@ export default function About() {
 	return (
 		<div className=''>
 			<div className='max-w-7xl mx-auto px-5 py-10 lg:px-0'>
-				<h1 className='text-5xl font-righteous py-10'>About Us</h1>
+				<h1 className='text-5xl  py-10'>About Us</h1>
 
 				<div className='text-lg tracking-wide'>
 					<Heading>Welcome to Jaguar Palace – Your Gateway to Real Estate Excellence</Heading>
@@ -49,7 +49,7 @@ export default function About() {
 }
 
 const Heading = ({ children }) => {
-	return <h2 className='font-righteous text-gray-800 my-5'>{children}</h2>;
+	return <h2 className=' text-gray-800 my-5'>{children}</h2>;
 };
 
 const Paragraph = ({ children }) => {

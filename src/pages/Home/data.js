@@ -27,31 +27,31 @@ export const data = {
 
 export const options = [
 	{
-		heading: "property booking",
-		detail: "Nunc. Lectus eget. Iaculis dui velit velit turpis lacus nostra a aliquet integer",
-		link: "/",
-		Icon: FaBuilding,
-	},
-
-	{
-		heading: "payment guarantee",
-		detail: "Nunc. Lectus eget. Iaculis dui velit velit turpis lacus nostra a aliquet integer",
-		link: "/",
-		Icon: FaPencilAlt,
+	  heading: "Property Appraisal",
+	  detail: "Get accurate property appraisals with our advanced valuation tools. Nunc. Lectus eget. Iaculis dui velit velit turpis lacus nostra a aliquet integer",
+	  link: "/property-appraisal",
+	  Icon: FaBuilding,
 	},
 	{
-		heading: "house managment",
-		detail: "Nunc. Lectus eget. Iaculis dui velit velit turpis lacus nostra a aliquet integer",
-		link: "/",
-		Icon: FaHouse,
+	  heading: "Secure Document Locker",
+	  detail: "Protect your important documents using our secure document locker. Nunc. Lectus eget. Iaculis dui velit velit turpis lacus nostra a aliquet integer",
+	  link: "/secure-documents",
+	  Icon: FaPencilAlt,
 	},
 	{
-		heading: "Property deal",
-		detail: "Nunc. Lectus eget. Iaculis dui velit velit turpis lacus nostra a aliquet integer",
-		link: "/",
-		Icon: MdWork,
+	  heading: "Agent To Client Interaction",
+	  detail: "Enhance communication between agents and clients for a seamless real estate experience. Nunc. Lectus eget. Iaculis dui velit velit turpis lacus nostra a aliquet integer",
+	  link: "/agent-client-interaction",
+	  Icon: FaHouse,
 	},
-];
+	{
+	  heading: "Secure Crypto Payments",
+	  detail: "Experience secure and efficient crypto payments for your real estate transactions. Nunc. Lectus eget. Iaculis dui velit velit turpis lacus nostra a aliquet integer",
+	  link: "/secure-crypto-payments",
+	  Icon: MdWork,
+	},
+  ];
+  
 
 export const recentProperty = [
 	{

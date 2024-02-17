@@ -26,7 +26,11 @@ export default function App() {
 			<MainWraper>
 				<Toaster
 					position='bottom-center'
-					reverseOrder={false}
+					reverseOrder={true}
+					toastOptions={{
+						className: 'capitalize',
+						
+					  }}
 				/>
 				<Scroll />
 				<Navbar />
