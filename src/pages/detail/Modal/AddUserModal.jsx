@@ -81,7 +81,7 @@ export default function AddNewUser({ closeModal, setChanged }) {
 
   return (
     <div
-      className="bg-black/50 backdrop-blur-sm fixed w-screen h-screen left-0 top-0 grid place-content-center z-[99999]"
+      className="bg-black/50 backdrop-blur-sm fixed w-screen h-screen left-0 top-0 grid place-content-center z-[99998]"
       onClick={() => closeModal(false)}
     >
       <motion.div

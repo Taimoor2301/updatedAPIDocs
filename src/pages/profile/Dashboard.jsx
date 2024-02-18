@@ -17,7 +17,8 @@ const Profile = () => {
 	const [coverImageUrl, setCoverImageUrl] = useState("");
 	const { userData, loading, error } = useUserData();
 	const api = useAxios();
-
+	const [CoverLoading, setCoverLoading]=useState(false);
+	const [ProfileLoading, setProfileLoading]=useState(false);
 	const [profileImage, setProfileImage] = useState(null);
 	const [coverImage, setCoverImage] = useState(null);
 
@@ -34,6 +35,7 @@ const Profile = () => {
 	}, [coverImage, userData]);
 
 	const handleProfileImageChange = async (e, type) => {
+		setProfileLoading(true);
 		const imageLink = await getLink(e);
 
 		const dataWithNewImage = type === "profile" ? { ...userData, profile_image: imageLink } : { ...userData, cover_image: imageLink };
@@ -45,6 +47,9 @@ const Profile = () => {
 		} catch (error) {
 			toast.error(`${error}`);
 			type === "profile" ? setProfileImageUrl(userData.profile_image) : setCoverImageUrl(userData.cover_image);
+		}
+		finally{
+		setProfileLoading(false);
 		}
 	};
 	

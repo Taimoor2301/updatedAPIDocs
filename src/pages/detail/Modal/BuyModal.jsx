@@ -17,7 +17,7 @@ export default function BuyModal({ closeModal, setChanged,loadinToBuy, buyEth, b
 
   return (
     <div
-      className="bg-black/50 backdrop-blur-sm fixed w-screen h-screen left-0 top-0 grid place-content-center z-[99999]"
+      className="bg-black/50 backdrop-blur-sm fixed w-screen h-screen left-0 top-0 grid place-content-center z-[99995]"
       onClick={() => closeModal(false)}
     >
       <motion.div

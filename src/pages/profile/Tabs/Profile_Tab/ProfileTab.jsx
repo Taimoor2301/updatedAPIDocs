@@ -7,7 +7,8 @@ import { DataTemplate } from "../../../../constants/dataTemplate";
 import { Country, State, City } from "country-state-city";
 import { useAuthStore } from "../../../../store/auth";
 import Spinner from "../../../../components/Spinner";
-
+import PhoneInput from "react-phone-number-input";
+import 'react-phone-number-input/style.css'
 const ProfileTab = () => {
   const [data, setData] = useState(DataTemplate);
   const { userData, loading, error } = useUserData();
@@ -32,26 +33,26 @@ const ProfileTab = () => {
   };
 
   const handleCountryChange = (e) => {
-	const { name, value } = e.target;
-  
-	// Set state and city values to 'Select' when the country is changed
-	setData((prev) => ({
-	  ...prev,
-	  state: { ...prev.state, value: "Select" },
-	  city: { ...prev.city, value: "Select" },
-	  [name]: { ...prev[name], value },
-	}));
+    const { name, value } = e.target;
+
+    // Set state and city values to 'Select' when the country is changed
+    setData((prev) => ({
+      ...prev,
+      state: { ...prev.state, value: "Select" },
+      city: { ...prev.city, value: "Select" },
+      [name]: { ...prev[name], value },
+    }));
   };
-  
-  
-  const handleStateChange=(e) => {
-	const { name, value } = e.target;
-	// Set state and city values to 'Select' when the country is changed
-	setData((prev) => ({
-	  ...prev,
-	  city: { ...prev.city, value: "Select" },
-	  [name]: { ...prev[name], value },
-	}));
+
+
+  const handleStateChange = (e) => {
+    const { name, value } = e.target;
+    // Set state and city values to 'Select' when the country is changed
+    setData((prev) => ({
+      ...prev,
+      city: { ...prev.city, value: "Select" },
+      [name]: { ...prev[name], value },
+    }));
   };
 
   const handleUpdate = async () => {
@@ -109,7 +110,7 @@ const ProfileTab = () => {
   );
 };
 
-const DataField = ({ name = "", value = "", onChange, onCountryChange, type = "text", label, country, state,handleStateChange }) => {
+const DataField = ({ name = "", value = "", onChange, onCountryChange, type = "text", label, country, state, handleStateChange }) => {
   if (type === "select") {
     const countries = Country.getAllCountries();
 
@@ -174,6 +175,21 @@ const DataField = ({ name = "", value = "", onChange, onCountryChange, type = "t
         </select>
       </div>
     );
+  }
+  if (label === 'Phone Number') {
+    return(
+      <div className='flex flex-col gap-1 font-poppins col-span-1'>
+      <label className='text-gray-500 font-medium'>{label}</label>
+       <PhoneInput
+      international
+      defaultCountry="US"
+      value={value}
+      onChange={(e)=>{
+        console.log(e)
+        }} className='p-2 rounded-md border hover:border-primary focus:border-primary focus:outline-none' />
+    </div>
+    )
+   
   }
   return (
     <div className='flex flex-col gap-1 font-poppins col-span-1'>

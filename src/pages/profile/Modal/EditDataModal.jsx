@@ -95,7 +95,7 @@ const EditDataModal = ({ closeModel, setAdded, id, updater }) => {
 
   return (
     <motion.div
-      className="bg-black/50 text-left hover:text-gray-800 text-gray-800 backdrop-blur-sm fixed w-screen h-screen left-0 top-0 grid place-content-center z-[99999]"
+      className="bg-black/50 text-left hover:text-gray-800 text-gray-800 backdrop-blur-sm fixed w-screen h-screen left-0 top-0 grid place-content-center z-[99995]"
       onClick={() => closeModel(false)}
     >
       <motion.div

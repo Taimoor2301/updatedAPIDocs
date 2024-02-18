@@ -60,7 +60,7 @@ const ListingTab = () => {
   return (
     <div className="flex flex-col gap-8">
       <button
-        className="bg-gray-800 text-white text-xs p-2 w-28 rounded font-medium tracking-wider hover:bg-primary flex justify-center items-center gap-1 group self-end transition-all"
+        className="bg-gray-800 text-white text-xs p-2 w-28 rounded  tracking-wider hover:bg-primary flex justify-center items-center gap-1 group self-end transition-all"
         onClick={() => setOpenAddNewModel(true)}
       >
         Add New{" "}

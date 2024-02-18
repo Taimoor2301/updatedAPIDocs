@@ -62,7 +62,7 @@ const HistoryTab = () => {
 					/>
 				))
 			) : (
-				<div className='text-center font-medium'>No Documents</div>
+				<div className='text-center '>No Documents</div>
 			)}
 		</div>
 	);

@@ -22,6 +22,19 @@ const AddNewModel = ({ closeModel, setAdded }) => {
 		owner_address: "",
 		owner_percentage: "",
 	};
+	const [errorMessage, setErrorMessage] = useState({})
+	const validateText = (e) => {
+		const inputType = e.target.type.toLowerCase();
+		const maxLength = inputType === 'textarea' ? 500 : 255;
+
+		if (e.target.value?.length > maxLength) {
+			setErrorMessage({ ...errorMessage, [e.target.name]: `${e.target.name} is too long, should only be ${maxLength} characters` });
+		} else {
+			// Clear the error message if the length is within the limit
+			setErrorMessage({ ...errorMessage, [e.target.name]: '' });
+		}
+	};
+
 
 	useEffect(() => {
 		document.body.style.overflowY = "hidden";
@@ -49,7 +62,7 @@ const AddNewModel = ({ closeModel, setAdded }) => {
 			}
 			formData.append('deed_of_ownership', deed);
 			formData.append('appraisal', appraisal);
-			formData.append('pictures',imageLink);
+			formData.append('pictures', imageLink);
 			// Make the API request
 			const response = await api.post(`properties/`, formData, {
 				headers: {
@@ -72,7 +85,7 @@ const AddNewModel = ({ closeModel, setAdded }) => {
 
 	return (
 		<motion.div
-			className='bg-black/50 backdrop-blur-sm fixed w-screen h-screen left-0 top-0 grid place-content-center z-[99999]'
+			className='bg-black/50 backdrop-blur-sm fixed w-screen h-screen left-0 top-0 grid place-content-center z-[99995]'
 			onClick={() => closeModel(false)}>
 			<motion.div
 				initial={{ opacity: 0, scale: 0 }}
@@ -86,174 +99,209 @@ const AddNewModel = ({ closeModel, setAdded }) => {
 				/>
 
 				<h1 className='text-lg font-poppins font-medium underline'>Add Property</h1>
-				<form onSubmit={(e)=>{
-				e.preventDefault();
-				handlePostRequest(e)
-				}}>
-				<div className='grid grid-cols-2 md:grid-cols-4 gap-5 text-sm font-poppins w-full overflow-auto flex-1' style={{overflow:'auto'}}>
-					{/*  type  */}
-					<label
-						htmlFor=''
-						className='flex flex-col gap-1 col-span-1 items-start '>
-						Property Type *
-						<select
-							required={true}
-							value={data.property_type}
-							className='border border-gray-400 rounded-lg p-1'
-							onChange={(e) => setData((prev) => ({ ...prev, property_type: e.target.value }))}>
-							<option value='commercial'>Commercial</option>
-							<option value='residential'>Residential</option>
-						</select>
-					</label>
+				{Object.entries(errorMessage).map(([fieldName, error]) => (
+					<ul  className="list-style-type: disc;">
 
-					{/* location  */}
-					<label className='col-span-1 flex flex-col gap-1'>
-						Location *
-						<div className='flex gap-2 flex-wrap'>
-							<input
-							required={true}
-								className='border rounded-lg border-gray-400 p-2 w-28'
-								type='number'
-								name='Lattitude'
-								value={data.latitude}
-								onChange={(e) => setData((p) => ({ ...p, latitude: e.target.value }))}
-								placeholder='Latitude'
-							/>
-							<input
+						<li className="text-red-500 text-sm capitalize" >{error}</li>
+					
+					</ul>
+				))}
+				<form onSubmit={(e) => {
+					e.preventDefault();
+					handlePostRequest(e)
+				}} className="overflow-auto">
+					<div className='grid grid-cols-2 md:grid-cols-4 gap-5 text-sm font-poppins w-full overflow-auto flex-1'>
+						{/*  type  */}
+						<label
+							htmlFor=''
+							className='flex flex-col gap-1 col-span-1 items-start '>
+							Property Type *
+							<select
 								required={true}
-								className='border border-gray-400 rounded-lg p-2 w-28'
-								type='number'
-								name='Longitude'
-								value={data.longitude}
-								onChange={(e) => setData((p) => ({ ...p, longitude: e.target.value }))}
-								placeholder='Longitude'
-							/>
-						</div>
-					</label>
+								value={data.property_type}
+								className='border border-gray-400 rounded-lg p-1'
+								onChange={(e) => setData((prev) => ({ ...prev, property_type: e.target.value }))}>
+								<option value='commercial'>Commercial</option>
+								<option value='residential'>Residential</option>
+							</select>
+						</label>
 
-					{/* pics  */}
-					<label className='col-span-2 flex flex-col gap-2'>
-						Upload Pictures *
-						
-						<input
-							type='file'
-							required={true}
-							className='file:border-none file:p-1.5  file:rounded-tl-lg file:rounded-bl-lg border border-gray-400 rounded-lg file:bg-gray-800 file:text-white'
-							id='property_pictures'
-							onChange={(e) => setImage(e)}
-						/>
-					</label>
+						{/* location  */}
+						<label className='col-span-1 flex flex-col gap-1'>
+							Location *
+							<div className='flex gap-2 flex-wrap'>
+								<input
+									disabled={loading}
+									required={true}
+									className='border rounded-lg border-gray-400 p-2 w-28'
+									type='number'
+									name='Lattitude'
+									value={data.latitude}
+									onChange={(e) => setData((p) => ({ ...p, latitude: e.target.value }))}
+									placeholder='Latitude'
+								/>
+								<input
+									disabled={loading}
+									required={true}
+									className='border border-gray-400 rounded-lg p-2 w-28'
+									type='number'
+									name='Longitude'
+									value={data.longitude}
+									onChange={(e) => setData((p) => ({ ...p, longitude: e.target.value }))}
+									placeholder='Longitude'
+								/>
+							</div>
+						</label>
 
-					{/* title  */}
-					<label className='col-span-2 lg:grid-cols-1 flex flex-col gap-2'>
-						Title *
-						<input
-							name='title'
-							required={true}
-							type='text'
-							value={data.title}
-							placeholder='Title'
-							className='rounded-lg border border-gray-400 p-2'
-							onChange={(e) => setData((prev) => ({ ...prev, title: e.target.value }))}
-						/>
-					</label>
+						{/* pics  */}
+						<label className='col-span-2 flex flex-col gap-2'>
+							Upload Pictures *
 
-					{/* description  */}
-					<label className='col-span-full flex flex-col gap-2'>
-						Property Description *
-						<textarea
-							name='PropertyDescription'
-							required={true}
-							cols='20'
-							rows='5'
-							value={data.description}
-							placeholder='Description'
-							className='rounded-lg border border-gray-400 p-2'
-							onChange={(e) => setData((prev) => ({ ...prev, description: e.target.value }))}></textarea>
-					</label>
-
-					{/* google code  */}
-					<label className='col-span-1 flex flex-col gap-2'>
-						Google Plus Code *
-						<input
-							name='googlePlusCode'
-							required={true}
-							type='text'
-							value={data.google_plus_code}
-							placeholder='Google Plus Code'
-							className='rounded-lg border border-gray-400 p-2'
-							onChange={(e) => setData((prev) => ({ ...prev, google_plus_code: e.target.value }))}
-						/>
-					</label>
-
-					{/* Deed of ownership  */}
-					<label className='col-span-2 lg:col-span-1 flex flex-col gap-2'>
-						Deed of Ownership *
-						<input
-							name='Deedofownership'
-							required={true}
-							type='file'
-							className='file:border-none file:p-1.5  file:rounded-tl-lg file:rounded-bl-lg border border-gray-400 rounded-lg file:bg-gray-800 file:text-white'
-							onChange={(e) => setDeed(e.target.files[0])}
-						/>
-					</label>
-
-					{/* appraisal  */}
-					<label className='col-span-2 lg:col-span-1 flex flex-col gap-2'>
-						Appraisal *
-						<input
-							name='Appraisal'
-							required={true}
-							type='file'
-							className='file:border-none file:p-1.5  file:rounded-tl-lg file:rounded-bl-lg border border-gray-400 rounded-lg file:bg-gray-800 file:text-white'
-							onChange={(e) => setAppraisal(e.target.files[0])}
-						/>
-					</label>
-
-					{/* owner  */}
-					<label className='col-span-full flex flex-col gap-2'>
-						Owner *
-						<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2'>
 							<input
-								name='name'
+								disabled={loading}
+								type='file'
+								required={true}
+								className='file:border-none file:p-1.5  file:rounded-tl-lg file:rounded-bl-lg border border-gray-400 rounded-lg file:bg-gray-800 file:text-white'
+								id='property_pictures'
+								onChange={(e) => setImage(e)}
+							/>
+						</label>
+
+						{/* title  */}
+						<label className='col-span-2 lg:grid-cols-1 flex flex-col gap-2'>
+							Title *
+							<input
+								disabled={loading}
+								name='title'
 								required={true}
 								type='text'
-								value={data.owner_name}
-								placeholder='Name'
+								value={data.title}
+								placeholder='Title'
 								className='rounded-lg border border-gray-400 p-2'
-								onChange={(e) => setData((prev) => ({ ...prev, owner_name: e.target.value }))}
-							/>
-							<input
-								name='address'
-								required={true}
-								type='text'
-								value={data.owner_address}
-								placeholder='Address'
-								className='rounded-lg border border-gray-400 p-2'
-								onChange={(e) => setData((prev) => ({ ...prev, owner_address: e.target.value }))}
-							/>
-							<input
-								name='ownership'
-								required={true}
-								type='text'
-								value={data.owner_percentage}
-								placeholder='Ownership %'
-								className='rounded-lg border border-gray-400 p-2'
-								onChange={(e) => setData((prev) => ({ ...prev, owner_percentage: e.target.value }))}
-							/>
-						</div>
-					</label>
+								onChange={(e) => {
+									validateText(e)
+									setData((prev) => ({ ...prev, title: e.target.value }))
 
-					<button
-						disabled={loading}
-						className='p-2 disabled:opacity-70 disabled:cursor-not-allowed rounded-lg bg-gray-800 flex items-center justify-center text-white text-sm font-poppins font-medium gap-2 w-52 hover:bg-primary transition-all group h-12'
-						type="submit">
-						{loading ? "Please wait..." : "Submit"} <FaArrowRight className='group-hover:translate-x-2 transition-all' />
-					</button>
-				</div>
+								}}
+							/>
+						</label>
+
+						{/* description  */}
+						<label className='col-span-full flex flex-col gap-2'>
+							Property Description *
+							<textarea
+								name='PropertyDescription'
+								required={true}
+								cols='20'
+								rows='5'
+								value={data.description}
+								placeholder='Description'
+								className='rounded-lg border border-gray-400 p-2'
+								onChange={(e) => {
+									validateText(e)
+									setData((prev) => ({ ...prev, description: e.target.value }))
+								}}></textarea>
+						</label>
+
+						{/* google code  */}
+						<label className='col-span-1 flex flex-col gap-2'>
+							Google Plus Code *
+							<input
+								disabled={loading}
+								name='googlePlusCode'
+								required={true}
+								type='text'
+								value={data.google_plus_code}
+								placeholder='Google Plus Code'
+								className='rounded-lg border border-gray-400 p-2'
+								onChange={(e) => {
+									if (e.target.value?.length > 10) {
+										setErrorMessage({ ...errorMessage, [e.target.name]: `${e.target.name} too long, should only be 10 characters` });
+									} else {
+										// Clear the error message if the length is within the limit
+										setErrorMessage({ ...errorMessage, [e.target.name]: '' });
+									}
+									setData((prev) => ({ ...prev, google_plus_code: e.target.value }))
+
+								}}
+							/>
+						</label>
+
+						{/* Deed of ownership  */}
+						<label className='col-span-2 lg:col-span-1 flex flex-col gap-2'>
+							Deed of Ownership *
+							<input
+								disabled={loading}
+								name='Deedofownership'
+								required={true}
+								type='file'
+								className='file:border-none file:p-1.5  file:rounded-tl-lg file:rounded-bl-lg border border-gray-400 rounded-lg file:bg-gray-800 file:text-white'
+								onChange={(e) => setDeed(e.target.files[0])}
+							/>
+						</label>
+
+						{/* appraisal  */}
+						<label className='col-span-2 lg:col-span-1 flex flex-col gap-2'>
+							Appraisal *
+							<input
+								disabled={loading}
+								name='Appraisal'
+								required={true}
+								type='file'
+								className='file:border-none file:p-1.5  file:rounded-tl-lg file:rounded-bl-lg border border-gray-400 rounded-lg file:bg-gray-800 file:text-white'
+								onChange={(e) => setAppraisal(e.target.files[0])}
+							/>
+						</label>
+
+						{/* owner  */}
+						<label className='col-span-full flex flex-col gap-2'>
+							Owner *
+							<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2'>
+								<input
+									disabled={loading}
+									name='owner name'
+									required={true}
+									type='text'
+									value={data.owner_name}
+									placeholder='Name'
+									className='rounded-lg border border-gray-400 p-2'
+									onChange={(e) => setData((prev) => ({ ...prev, owner_name: e.target.value }))}
+								/>
+								<input
+									disabled={loading}
+									name='address'
+									required={true}
+									type='text'
+									value={data.owner_address}
+									placeholder='Address'
+									className='rounded-lg border border-gray-400 p-2'
+									onChange={(e) => setData((prev) => ({ ...prev, owner_address: e.target.value }))}
+								/>
+								<input
+									disabled={loading}
+									name='ownership percentage'
+									required={true}
+									type='number'
+									min={1}
+									max={100}
+									value={data.owner_percentage}
+									placeholder='Ownership %'
+									className='rounded-lg border border-gray-400 p-2'
+									onChange={(e) => setData((prev) => ({ ...prev, owner_percentage: e.target.value }))}
+								/>
+							</div>
+						</label>
+
+						<button
+							disabled={loading}
+							className='p-2 disabled:opacity-70 disabled:cursor-not-allowed rounded-lg bg-gray-800 flex items-center justify-center text-white text-sm font-poppins font-medium gap-2 w-52 hover:bg-primary transition-all group h-12'
+							type="submit">
+							{loading ? "Please wait..." : "Submit"} <FaArrowRight className='group-hover:translate-x-2 transition-all' />
+						</button>
+					</div>
 				</form>
 			</motion.div>
-			
+
 		</motion.div>
 	);
 };

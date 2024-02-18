@@ -26,9 +26,18 @@ export default function App() {
 			<MainWraper>
 				<Toaster
 					position='bottom-center'
+					containerStyle={{
+						
+						zIndex:2147483647,
+						
+					  }}
 					reverseOrder={true}
 					toastOptions={{
 						className: 'capitalize',
+						style:{
+						zIndex:2147483647,
+						position:'relative'
+						}
 						
 					  }}
 				/>

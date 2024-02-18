@@ -121,7 +121,7 @@ const ListingModal = ({ closeModel, setAdded, id }) => {
 	return (
 		<motion.div
 			style={{ overflow: "auto" }}
-			className='bg-black/50 hover:text-gray-800 text-gray-800 backdrop-blur-sm fixed w-screen h-screen left-0 top-0 grid place-content-center z-[99999]'
+			className='bg-black/50 hover:text-gray-800 text-gray-800 backdrop-blur-sm fixed w-screen h-screen left-0 top-0 grid place-content-center z-[99995]'
 			onClick={() => closeModel(false)}>
 			<motion.div
 				initial={{ opacity: 0, scale: 0 }}
@@ -139,7 +139,7 @@ const ListingModal = ({ closeModel, setAdded, id }) => {
 							<div>Price in Matic:</div>
 							<div style={{ display: "inline" }}>
 								<p>
-									{data?.price_in_eth} <FaEthereum size={20} />
+									{data?.price_in_eth ? data?.price_in_eth : 'Not Listed'}
 								</p>
 							</div>
 						</div>
@@ -147,7 +147,7 @@ const ListingModal = ({ closeModel, setAdded, id }) => {
 							<div>Price in Token:</div>
 							<div style={{ display: "inline" }}>
 								<p>
-									{data?.price_in_token} <FaEthereum size={20} />
+									{data?.price_in_token} 
 								</p>
 							</div>
 						</div>
@@ -169,6 +169,7 @@ const ListingModal = ({ closeModel, setAdded, id }) => {
 							type='number'
 							name='Price In Eth'
 							value={ethPrice}
+							disabled={loading}
 							onChange={(e) => setEthPrice(e.target.value)}
 							className='border border-purple-500 rounded-lg p-3 '
 						/>
@@ -181,6 +182,7 @@ const ListingModal = ({ closeModel, setAdded, id }) => {
 							name='Price In Token'
 							value={tokenPrice}
 							placeholder=''
+							disabled={loading}
 							onChange={(e) => setTokenPrice(e.target.value)}
 							className='border border-purple-500 rounded-lg p-3 '
 						/>
@@ -191,6 +193,7 @@ const ListingModal = ({ closeModel, setAdded, id }) => {
 							className='border border-purple-500 rounded-lg p-3 '
 							name='isUnlimited'
 							id=''
+							disabled={loading}
 							onChange={(e) => {
 								if (e.target.value == "2") {
 									setLimited(false);
@@ -217,6 +220,7 @@ const ListingModal = ({ closeModel, setAdded, id }) => {
 								name='endingTime'
 								value={dateTime}
 								placeholder=''
+								disabled={loading}
 								className='border border-purple-500 rounded-lg p-3 '
 							/>
 						</div>
@@ -225,7 +229,7 @@ const ListingModal = ({ closeModel, setAdded, id }) => {
 					<div
 						className='col-span-full flex justify-center'
 						onClick={createItem}>
-						<button className='max-w-xl w-full py-2 font-bold rounded-lg text-xl bg-gray-800 hover:bg-primary transition-all text-white'>
+						<button disabled={loading} className='max-w-xl w-full py-2 font-bold rounded-lg text-xl bg-gray-800 hover:bg-primary transition-all text-white'>
 							{loading ? "Please Wait..." : "Submit"}
 						</button>
 					</div>
